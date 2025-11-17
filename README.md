@@ -15,7 +15,7 @@ This tool scans a Windows PolicyDefinitions directory (ADMX/ADML) and exports ev
 
 ## Usage
 
-```ps
+```powershell
 python admx_parser.py [OPTIONS]
 ```
 
@@ -37,7 +37,7 @@ python admx_parser.py [OPTIONS]
 
 ### Examples
 
-```ps
+```powershell
 # Default (pretty JSON)
 python admx_parser.py
 
