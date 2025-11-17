@@ -113,12 +113,6 @@ def build_argument_parser() -> argparse.ArgumentParser:
         action="store_true",
         help="Emit minified JSON output (ignored when --format yaml).",
     )
-    parser.add_argument(
-        "-v",
-        "--verbose",
-        action="store_true",
-        help="Enable verbose logging.",
-    )
     return parser
 
 class AdmxParser:
@@ -482,7 +476,7 @@ def main(argv: Optional[Sequence[str]] = None) -> int:
     parser = build_argument_parser()
     args = parser.parse_args(argv)
 
-    logging.basicConfig(level=logging.DEBUG if args.verbose else logging.INFO, format="%(message)s")
+    logging.basicConfig(level=logging.INFO, format="%(message)s")
 
     admx_parser = AdmxParser(
         definitions_path=args.definitions,
