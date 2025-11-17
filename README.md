@@ -55,45 +55,60 @@ python admx_parser.py --class Machine --category Edge --compress
 
 ```json
 {
-  "File": "AccountNotifications.admx",
-  "CategoryName": "AccountNotifications",
-  "PolicyName": "DisableAccountNotifications",
-  "NameSpace": "Microsoft.Policies.AccountNotifications",
-  "Supported": "Windows_10_0_20H1_NOSERVER",
-  "DisplayName": "Turn off account notifications in Start",
-  "ExplainText": "This policy allows you to prevent Windows from displaying notifications
-    to Microsoft account (MSA) [...]",
+  "File": "AppPrivacy.admx",
+  "CategoryName": "AppPrivacy",
+  "PolicyName": "LetAppsAccessAccountInfo",
+  "NameSpace": "Microsoft.Policies.AppPrivacy",
+  "Supported": "Windows_10_0",
+  "DisplayName": "Let Windows apps access account information",
+  "ExplainText": "This policy setting specifies whether Windows apps can access account information. You can specify either a default setting for all apps or a per-app setting by specifying a Package Family Name. You can get the Package Family Name for an app by using the Get-AppPackage Windows PowerShell cmdlet. A per-app setting overrides the default setting. If you choose the \"User is in control\" option, employees in your organization can decide whether Windows apps can access account information by using Settings > Privacy on the device. If you choose the \"Force Allow\" option, Windows apps are allowed to access account information and employees in your organization cannot change it. If you choose the \"Force Deny\" option, Windows apps are not allowed to access account information and employees in your organization cannot change it. If you disable or do not configure this policy setting, employees in your organization can decide whether Windows apps can access account information by using Settings > Privacy on the device. If an app is open when this Group Policy object is applied on a device, employees must restart the app or device for the policy changes to be applied to the app.",
   "KeyPath": [
-    "HKCU\\SOFTWARE\\Policies\\Microsoft\\Windows\\CurrentVersion\\AccountNotifications"
+    "HKLM\\Software\\Policies\\Microsoft\\Windows"
   ],
-  "ValueName": "DisableAccountNotifications",
+  "ValueName": "AppPrivacy",
   "Elements": [
-    {
-      "Type": "EnabledValue",
-      "Value": "1"
-    },
-    {
-      "Type": "DisabledValue",
-      "Value": "0"
+    { "Type": "Enum", "ValueName": "LetAppsAccessAccountInfo", "Items": [
+        { "DisplayName": "User is in control", "Value": "0" },
+        { "DisplayName": "Force Allow", "Value": "1" },
+        { "DisplayName": "Force Deny", "Value": "2" }
+      ]
     }
   ]
 },
 ```
 ```yaml
-- File: AccountNotifications.admx
-  CategoryName: AccountNotifications
-  PolicyName: DisableAccountNotifications
-  NameSpace: Microsoft.Policies.AccountNotifications
-  Supported: Windows_10_0_20H1_NOSERVER
-  DisplayName: Turn off account notifications in Start
-  ExplainText: 'This policy allows you to prevent Windows from displaying notifications
-    to Microsoft account (MSA) [...]'
+- File: AppPrivacy.admx
+  CategoryName: AppPrivacy
+  PolicyName: LetAppsAccessAccountInfo
+  NameSpace: Microsoft.Policies.AppPrivacy
+  Supported: Windows_10_0
+  DisplayName: Let Windows apps access account information
+  ExplainText: This policy setting specifies whether Windows apps can access account
+    information. You can specify either a default setting for all apps or a per-app
+    setting by specifying a Package Family Name. You can get the Package Family Name
+    for an app by using the Get-AppPackage Windows PowerShell cmdlet. A per-app setting
+    overrides the default setting. If you choose the "User is in control" option,
+    employees in your organization can decide whether Windows apps can access account
+    information by using Settings > Privacy on the device. If you choose the "Force
+    Allow" option, Windows apps are allowed to access account information and employees
+    in your organization cannot change it. If you choose the "Force Deny" option,
+    Windows apps are not allowed to access account information and employees in your
+    organization cannot change it. If you disable or do not configure this policy
+    setting, employees in your organization can decide whether Windows apps can access
+    account information by using Settings > Privacy on the device. If an app is open
+    when this Group Policy object is applied on a device, employees must restart the
+    app or device for the policy changes to be applied to the app.
   KeyPath:
-  - HKCU\SOFTWARE\Policies\Microsoft\Windows\CurrentVersion\AccountNotifications
-  ValueName: DisableAccountNotifications
+  - HKLM\Software\Policies\Microsoft\Windows
+  ValueName: AppPrivacy
   Elements:
-  - Type: EnabledValue
-    Value: '1'
-  - Type: DisabledValue
-    Value: '0'
+  - Type: Enum
+    ValueName: LetAppsAccessAccountInfo
+    Items:
+    - DisplayName: User is in control
+      Value: '0'
+    - DisplayName: Force Allow
+      Value: '1'
+    - DisplayName: Force Deny
+      Value: '2'
 ```

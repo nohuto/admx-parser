@@ -16,6 +16,9 @@ LOG = logging.getLogger("admx_parser")
 STRING_TOKEN = re.compile(r"\$\((?:string|String)\.(?P<id>[^)]+)\)")
 UNICODE_ENCODING_PATTERN = re.compile(br"encoding\s*=\s*(?P<quote>['\"])unicode(?P=quote)", re.IGNORECASE)
 UNICODE_ENCODING_TEXT_PATTERN = re.compile(r"encoding\s*=\s*(?P<quote>['\"])unicode(?P=quote)", re.IGNORECASE)
+INLINE_ELEMENTS_PATTERN = re.compile(
+    r'(?P<indent>[ \t]*)"Elements": "(?P<marker>__INLINE_ELEMENTS_\d+__)"(?P<trailing>,?)'
+)
 
 def _load_xml_tree(path: Path) -> "et.ElementTree[Any]":
     try:
@@ -457,6 +460,91 @@ def _infer_class(policy: Dict[str, object]) -> str:
             return "User"
     return "Unknown"
 
+def _serialize_json(payload: List[Dict[str, object]], *, pretty: bool) -> str:
+    if not pretty:
+        return json.dumps(payload)
+    prepared_payload, inline_map = _prepare_inline_elements(payload)
+    serialized = json.dumps(prepared_payload, indent=2)
+    if not inline_map:
+        return serialized
+    return _inject_inline_elements(serialized, inline_map, indent_width=2)
+
+def _prepare_inline_elements(payload: List[Dict[str, object]]):
+    inline_map: Dict[str, List[Dict[str, object]]] = {}
+    prepared: List[Dict[str, object]] = []
+    for policy in payload:
+        record = dict(policy)
+        elements = record.get("Elements")
+        if isinstance(elements, list):
+            marker = f"__INLINE_ELEMENTS_{len(inline_map)}__"
+            inline_map[marker] = elements
+            record["Elements"] = marker
+        prepared.append(record)
+    return prepared, inline_map
+
+def _inject_inline_elements(serialized: str, inline_map: Dict[str, List[Dict[str, object]]], *, indent_width: int) -> str:
+    def replacer(match: re.Match[str]) -> str:
+        marker = match.group("marker")
+        elements = inline_map.get(marker)
+        if elements is None:
+            return match.group(0)
+        indent = match.group("indent")
+        trailing = match.group("trailing")
+        formatted = _format_inline_elements(elements, indent, indent_width)
+        return f'{indent}"Elements": {formatted}{trailing}'
+
+    return INLINE_ELEMENTS_PATTERN.sub(replacer, serialized)
+
+def _format_inline_elements(elements: List[Dict[str, object]], indent: str, indent_width: int) -> str:
+    if not elements:
+        return "[]"
+    indent_unit = " " * indent_width
+    inner_indent = indent + indent_unit
+    encoded_items = [
+        _format_inline_element(element, inner_indent, indent_width)
+        for element in elements
+    ]
+    body = ",\n".join(encoded_items)
+    return "[\n" + body + "\n" + indent + "]"
+
+def _format_inline_element(element: Dict[str, object], element_indent: str, indent_width: int) -> str:
+    encoded = _inline_object_string(element)
+    complex_keys = [key for key, value in element.items() if isinstance(value, list)]
+    if not complex_keys:
+        return f"{element_indent}{encoded}"
+    for key in complex_keys:
+        value = element[key]
+        if not isinstance(value, list):
+            continue
+        formatted_list = _format_nested_list(value, element_indent, indent_width)
+        raw = json.dumps(value, separators=(", ", ": "))
+        encoded = encoded.replace(f'"{key}": {raw}', f'"{key}": {formatted_list}', 1)
+    if encoded.endswith(" }"):
+        encoded = encoded[:-2] + "\n" + element_indent + "}"
+    return f"{element_indent}{encoded}"
+
+def _format_nested_list(values: List[object], element_indent: str, indent_width: int) -> str:
+    if not values:
+        return "[]"
+    indent_unit = " " * indent_width
+    list_indent = element_indent + indent_unit
+    entry_indent = element_indent + (indent_unit * 2)
+    formatted_entries = []
+    for entry in values:
+        if isinstance(entry, dict):
+            entry_text = _inline_object_string(entry)
+        else:
+            entry_text = json.dumps(entry)
+        formatted_entries.append(f"{entry_indent}{entry_text}")
+    return "[\n" + ",\n".join(formatted_entries) + "\n" + list_indent + "]"
+
+def _inline_object_string(value: Dict[str, object]) -> str:
+    encoded = json.dumps(value, separators=(", ", ": "))
+    if encoded.startswith("{") and encoded.endswith("}"):
+        inner = encoded[1:-1].strip()
+        encoded = f"{{ {inner} }}"
+    return encoded
+
 def write_payload(path: Path, payload: List[Dict[str, object]], *, fmt: str, pretty: bool) -> None:
     path.parent.mkdir(parents=True, exist_ok=True)
     if fmt == "yaml":
@@ -469,7 +557,7 @@ def write_payload(path: Path, payload: List[Dict[str, object]], *, fmt: str, pre
             default_flow_style=False,
         )
     else:
-        serialized = json.dumps(payload, indent=2 if pretty else None)
+        serialized = _serialize_json(payload, pretty=pretty)
     path.write_text(serialized, encoding="utf-8")
 
 def main(argv: Optional[Sequence[str]] = None) -> int:
