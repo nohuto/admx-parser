@@ -1,6 +1,9 @@
 # Windows ADMX Parser
 
-This tool scans a Windows PolicyDefinitions directory (ADMX/ADML) and exports every policy definition into a structured JSON or YAML file. This was made for being able to quickly search for any string in LGPE to see the data/value/key/description. I personally used it in the [win-config](https://github.com/5Noxi/win-config) project for several options. This small parser project was inspired by the [WindowsAdmxParser](https://github.com/innovatodev/WindowsAdmxParser) powershell module.
+This tool scans a Windows PolicyDefinitions directory (ADMX/ADML) and exports every policy definition into a structured JSON or YAML file. This was made for being able to quickly search for any string in LGPE to see the data/value/key/description. I personally used it in the [win-config](https://github.com/5Noxi/win-config) project for several options. This small parser project was inspired by the [WindowsAdmxParser](https://github.com/innovatodev/WindowsAdmxParser) powershell module. However, since it's not entirely correct (sometimes `KeyName` is displayed instead of `ValueName`), the class is not inserted directly into `KeyPath` and `KeyNames` is not inserted directly into `KeyPath`.
+
+> [!CAUTION]
+> An issue that occurred while creating the parser is that a value was defined outside of `Elements` and the same value was defined again in `Elements`. Elements does not contain any data for the value outside the elements list, which is handled in the tool by adding the value to the end of the keypath. However, there're isolated cases where this isn't correct (so far only where both values had the same names). I've currently solved this by deleting the upper value.
 
 ## Features
 
@@ -63,9 +66,8 @@ python admx_parser.py --class Machine --category Edge --compress
   "DisplayName": "Let Windows apps access account information",
   "ExplainText": "This policy setting specifies whether Windows apps can access account information. You can specify either a default setting for all apps or a per-app setting by specifying a Package Family Name. You can get the Package Family Name for an app by using the Get-AppPackage Windows PowerShell cmdlet. A per-app setting overrides the default setting. If you choose the \"User is in control\" option, employees in your organization can decide whether Windows apps can access account information by using Settings > Privacy on the device. If you choose the \"Force Allow\" option, Windows apps are allowed to access account information and employees in your organization cannot change it. If you choose the \"Force Deny\" option, Windows apps are not allowed to access account information and employees in your organization cannot change it. If you disable or do not configure this policy setting, employees in your organization can decide whether Windows apps can access account information by using Settings > Privacy on the device. If an app is open when this Group Policy object is applied on a device, employees must restart the app or device for the policy changes to be applied to the app.",
   "KeyPath": [
-    "HKLM\\Software\\Policies\\Microsoft\\Windows"
+    "HKLM\\Software\\Policies\\Microsoft\\Windows\\AppPrivacy"
   ],
-  "ValueName": "AppPrivacy",
   "Elements": [
     { "Type": "Enum", "ValueName": "LetAppsAccessAccountInfo", "Items": [
         { "DisplayName": "User is in control", "Value": "0" },
@@ -99,8 +101,7 @@ python admx_parser.py --class Machine --category Edge --compress
     when this Group Policy object is applied on a device, employees must restart the
     app or device for the policy changes to be applied to the app.
   KeyPath:
-  - HKLM\Software\Policies\Microsoft\Windows
-  ValueName: AppPrivacy
+  - HKLM\Software\Policies\Microsoft\Windows\AppPrivacy
   Elements:
   - Type: Enum
     ValueName: LetAppsAccessAccountInfo

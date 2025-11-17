@@ -5,7 +5,7 @@
 import argparse, io, json, logging, re
 from collections import Counter
 from pathlib import Path
-from typing import Any, Dict, Iterable, List, Match, Optional, Sequence, cast
+from typing import Any, Dict, Iterable, List, Match, Optional, Sequence, Tuple, cast
 try:
     import yaml
 except ImportError:
@@ -204,16 +204,36 @@ class AdmxParser:
                 if self.policy_filter not in combined:
                     continue
 
-            key_path = policy.get("key", "") or ""
-            value_name = policy.get("valueName")
-            if (not value_name) and key_path:
-                parts = key_path.split("\\")
-                if len(parts) > 1:
-                    value_name = parts[-1]
-                    key_path = "\\".join(parts[:-1])
-            key_path_entries = self._build_key_paths(policy_class, key_path)
+            raw_key_path = policy.get("key", "") or ""
+            key_parent_path, derived_tail = self._split_key_tail(raw_key_path)
+            explicit_value_name = policy.get("valueName")
 
             elements = self._parse_elements(policy, q, admx_path.stem)
+            needs_parent_value = self._elements_require_parent_value(elements)
+
+            key_name_field: Optional[str] = None
+            value_field: Optional[str] = explicit_value_name or ""
+            key_path_for_entries = raw_key_path
+
+            if explicit_value_name:
+                if not needs_parent_value and elements:
+                    key_name_field = explicit_value_name
+                    value_field = ""
+                else:
+                    value_field = explicit_value_name
+            elif derived_tail:
+                if needs_parent_value:
+                    value_field = derived_tail
+                    key_path_for_entries = key_parent_path
+                else:
+                    key_name_field = derived_tail
+            else:
+                value_field = ""
+
+            if key_name_field is not None and not self._key_and_element_share_name(key_name_field, elements):
+                key_path_for_entries = self._ensure_key_suffix(key_path_for_entries, key_name_field)
+
+            key_path_entries = self._build_key_paths(policy_class, key_path_for_entries)
             records = {
                 "File": admx_path.name,
                 "CategoryName": category_name,
@@ -223,9 +243,10 @@ class AdmxParser:
                 "DisplayName": display_name,
                 "ExplainText": explain_text,
                 "KeyPath": key_path_entries,
-                "ValueName": value_name or "",
-                "Elements": elements,
             }
+            if value_field:
+                records["ValueName"] = value_field
+            records["Elements"] = elements
             yield records
 
     def _parse_elements(self, policy: Any, q, admx_base_name: str) -> List[Dict[str, object]]:
@@ -437,6 +458,48 @@ class AdmxParser:
         if not hives:
             hives = ["HKLM"]
         return [f"{hive}\\{normalized}" for hive in hives]
+
+    def _split_key_tail(self, key_path: str) -> Tuple[str, Optional[str]]:
+        normalized = key_path.rstrip("\\")
+        if not normalized or "\\" not in normalized:
+            return normalized, None
+        parent, tail = normalized.rsplit("\\", 1)
+        return parent, tail
+
+    def _elements_require_parent_value(self, elements: List[Dict[str, object]]) -> bool:
+        if not elements:
+            return True
+        parent_types = {"EnabledValue", "DisabledValue", "TrueValue", "FalseValue"}
+        for element in elements:
+            element_type = element.get("Type")
+            if element_type in parent_types:
+                return True
+            value_name = element.get("ValueName")
+            if not value_name and element_type not in parent_types:
+                return True
+        return False
+
+    def _ensure_key_suffix(self, key_path: str, suffix: str) -> str:
+        suffix = (suffix or "").strip("\\")
+        normalized = key_path.rstrip("\\")
+        if not normalized:
+            return suffix
+        if not suffix:
+            return normalized
+        parts = normalized.split("\\")
+        if parts[-1].lower() == suffix.lower():
+            return normalized
+        return f"{normalized}\\{suffix}"
+
+    def _key_and_element_share_name(self, key_name: str, elements: List[Dict[str, object]]) -> bool:
+        if not key_name or not elements:
+            return False
+        key_lower = key_name.lower()
+        for element in elements:
+            value_name = element.get("ValueName")
+            if isinstance(value_name, str) and value_name.lower() == key_lower:
+                return True
+        return False
 
 def print_summary(policies: List[Dict[str, object]]) -> None:
     if not policies:
