@@ -70,9 +70,9 @@ python admx_parser.py --class Machine --category Edge --compress
   ],
   "Elements": [
     { "Type": "Enum", "ValueName": "LetAppsAccessAccountInfo", "Items": [
-        { "DisplayName": "User is in control", "Value": "0" },
-        { "DisplayName": "Force Allow", "Value": "1" },
-        { "DisplayName": "Force Deny", "Value": "2" }
+        { "DisplayName": "User is in control", "Data": "0" },
+        { "DisplayName": "Force Allow", "Data": "1" },
+        { "DisplayName": "Force Deny", "Data": "2" }
       ]
     }
   ]
@@ -107,9 +107,9 @@ python admx_parser.py --class Machine --category Edge --compress
     ValueName: LetAppsAccessAccountInfo
     Items:
     - DisplayName: User is in control
-      Value: '0'
+      Data: '0'
     - DisplayName: Force Allow
-      Value: '1'
+      Data: '1'
     - DisplayName: Force Deny
-      Value: '2'
+      Data: '2'
 ```

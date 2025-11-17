@@ -280,7 +280,7 @@ class AdmxParser:
                     for item in element.findall(q("item")):
                         display_name = self._resolve_string(item.get("displayName", ""), admx_base_name)
                         value = self._extract_enum_value(item, q)
-                        items.append({"DisplayName": display_name, "Value": value})
+                        items.append({"DisplayName": display_name, "Data": value})
                     result.append(
                         {
                             "Type": "Enum",
@@ -314,7 +314,7 @@ class AdmxParser:
                 continue
             value = self._extract_simple_value(node, q)
             if value is not None:
-                result.append({"Type": label, "Value": value})
+                result.append({"Type": label, "Data": value})
 
         return result
 
