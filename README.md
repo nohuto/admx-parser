@@ -50,6 +50,9 @@ python admx_parser.py --class Machine --category Edge --compress
 
 ## Output Structure
 
+> [assets\Policies.json]()  
+> [assets\Policies.yaml]()
+
 ```json
 {
   "File": "AccountNotifications.admx",
