@@ -32,8 +32,8 @@ python admx_parser.py [OPTIONS]
 | `--include-obsolete` | Include obsolete/deprecated policies | Off |
 | `--format {json,yaml}` | Output format | `json` |
 | `--compress` | Write minified JSON (ignored for YAML) | Pretty |
-| `--output PATH` | Custom destination file | `Policies.json`/`Policies.yaml` |
-| `-v, --verbose` | Verbose logging | Info-level |
+| `--output PATH` | Custom destination file | `Policies.json`/`Policies.yaml` (in current dir) |
+| `-v, --verbose` | Verbose logging | Info level |
 | `-h, --help` | Shows flags from above | - |
 
 ### Examples

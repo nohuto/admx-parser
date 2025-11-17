@@ -17,7 +17,7 @@ STRING_TOKEN = re.compile(r"\$\((?:string|String)\.(?P<id>[^)]+)\)")
 UNICODE_ENCODING_PATTERN = re.compile(br"encoding\s*=\s*(?P<quote>['\"])unicode(?P=quote)", re.IGNORECASE)
 UNICODE_ENCODING_TEXT_PATTERN = re.compile(r"encoding\s*=\s*(?P<quote>['\"])unicode(?P=quote)", re.IGNORECASE)
 
-def _load_xml_tree(path: Path) -> et.ElementTree[Any]:
+def _load_xml_tree(path: Path) -> "et.ElementTree[Any]":
     try:
         return et.parse(path)
     except LookupError:
