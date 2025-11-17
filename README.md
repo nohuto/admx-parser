@@ -19,7 +19,7 @@ This tool scans a Windows PolicyDefinitions directory (ADMX/ADML) and exports ev
 ## Usage
 
 ```powershell
-python admx_parser.py [OPTIONS]
+python admx-parser.py [OPTIONS]
 ```
 
 ### CLI Flags
@@ -42,13 +42,13 @@ python admx_parser.py [OPTIONS]
 
 ```powershell
 # Default (pretty JSON)
-python admx_parser.py
+python admx-parser.py
 
 # YAML output, ignore inetres and WindowsUpdate ADMX files
-python admx_parser.py --format yaml --ignore inetres --ignore WindowsUpdate
+python admx-parser.py --format yaml --ignore inetres --ignore WindowsUpdate
 
 # Machine-only policies under the Edge category, compressed JSON
-python admx_parser.py --class Machine --category Edge --compress
+python admx-parser.py --class Machine --category Edge --compress
 ```
 
 ## Output Structure
