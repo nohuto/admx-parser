@@ -138,11 +138,14 @@ class AdmxParser:
         self.languages = self._compute_languages(languages)
         self._language_dirs = [p for p in self.definitions_path.iterdir() if p.is_dir()]
         self._string_cache: Dict[tuple[str, str], Dict[str, str]] = {}
+        self._supported_text_cache: Dict[str, str] = {}
+        self._supported_index_built = False
         self.class_filter = {c.lower() for c in (class_filter or [])}
         self.category_filter = category_filter.lower() if category_filter else None
         self.policy_filter = policy_filter.lower() if policy_filter else None
 
     def parse(self) -> List[Dict[str, object]]:
+        self._ensure_supported_index()
         records: List[Dict[str, object]] = []
         for admx_path in sorted(self.definitions_path.glob("*.admx")):
             base_name = admx_path.stem
@@ -153,6 +156,26 @@ class AdmxParser:
             LOG.info(f"{admx_path.name}: {len(file_records)} policies")
             records.extend(file_records)
         return records
+
+    def _ensure_supported_index(self) -> None:
+        if self._supported_index_built:
+            return
+        for admx_path in sorted(self.definitions_path.glob("*.admx")):
+            if not admx_path.is_file():
+                continue
+            try:
+                tree = _load_xml_tree(admx_path)
+            except et.ParseError as exc:
+                LOG.warning(f"Unable to index supported definitions in {admx_path.name}: {exc}")
+                continue
+            except LookupError as exc:
+                LOG.warning(f"Unsupported encoding in {admx_path.name}: {exc}")
+                continue
+            root = cast(et.Element, tree.getroot())
+            namespace = self._extract_namespace(root)
+            q = lambda tag: f"{{{namespace}}}{tag}" if namespace else tag
+            self._collect_supported_definitions(root, q, admx_path.stem)
+        self._supported_index_built = True
 
     def _parse_admx(self, admx_path: Path) -> Iterable[Dict[str, object]]:
         try:
@@ -187,7 +210,7 @@ class AdmxParser:
 
             display_name = self._resolve_string(policy.get("displayName", ""), admx_path.stem)
             explain_text = self._clean_text(self._resolve_string(policy.get("explainText", ""), admx_path.stem))
-            supported = self._extract_supported(policy, q)
+            supported = self._extract_supported(policy, q, admx_path.stem)
             if not self.include_obsolete and self._looks_obsolete(explain_text, supported):
                 continue
 
@@ -248,6 +271,29 @@ class AdmxParser:
                 records["ValueName"] = value_field
             records["Elements"] = elements
             yield records
+
+    def _collect_supported_definitions(self, root: Any, q, admx_base_name: str) -> None:
+        supported_node = root.find(q("supportedOn"))
+        if supported_node is None:
+            return
+        definitions_node = supported_node.find(q("definitions"))
+        if definitions_node is None:
+            return
+        for definition in definitions_node.findall(q("definition")):
+            raw_name = definition.get("name", "")
+            if not raw_name:
+                continue
+            display_value = definition.get("displayName", "")
+            if not display_value:
+                display_node = definition.find(q("displayName"))
+                if display_node is not None:
+                    display_value = display_node.text or ""
+            resolved = self._clean_text(self._resolve_string(display_value, admx_base_name))
+            if not resolved:
+                continue
+            key = self._supported_lookup_key(raw_name)
+            if key and key not in self._supported_text_cache:
+                self._supported_text_cache[key] = resolved
 
     def _parse_elements(self, policy: Any, q, admx_base_name: str) -> List[Dict[str, object]]:
         result: List[Dict[str, object]] = []
@@ -406,14 +452,33 @@ class AdmxParser:
                 return directory
         return candidate
 
-    def _extract_supported(self, policy: Any, q) -> str:
+    def _extract_supported(self, policy: Any, q, admx_base_name: str) -> str:
         supported_node = policy.find(q("supportedOn"))
         if supported_node is None:
             return ""
         ref = supported_node.get("ref", "")
-        if ":" in ref:
-            ref = ref.split(":", 1)[1]
-        return ref.replace("SUPPORTED_", "")
+        code = self._strip_supported_prefix(ref)
+        description = self._lookup_supported_description(ref, admx_base_name)
+        if code and description:
+            return f"{code} - {description}"
+        return description or code
+
+    def _lookup_supported_description(self, ref: str, admx_base_name: str) -> Optional[str]:
+        key = self._supported_lookup_key(ref)
+        if not key:
+            return None
+        description = self._supported_text_cache.get(key)
+        if description:
+            return description
+        prefixed = self._strip_prefix(ref).strip()
+        if prefixed:
+            fallback = self._get_string(admx_base_name, prefixed)
+            if fallback:
+                cleaned = self._clean_text(fallback)
+                if cleaned:
+                    self._supported_text_cache[key] = cleaned
+                    return cleaned
+        return None
 
     def _looks_obsolete(self, explain_text: str, supported: str) -> bool:
         text = f"{explain_text} {supported}".upper()
@@ -444,6 +509,17 @@ class AdmxParser:
 
     def _strip_prefix(self, value: str) -> str:
         return value.split(":", 1)[1] if ":" in value else value
+
+    def _strip_supported_prefix(self, value: str) -> str:
+        trimmed = self._strip_prefix((value or "").strip())
+        upper = trimmed.upper()
+        if upper.startswith("SUPPORTED_"):
+            return trimmed[len("SUPPORTED_") :]
+        return trimmed
+
+    def _supported_lookup_key(self, value: str) -> str:
+        normalized = self._strip_supported_prefix(value or "")
+        return normalized.casefold()
 
     def _build_key_paths(self, policy_class: str, key_path: str) -> List[str]:
         if not key_path:
