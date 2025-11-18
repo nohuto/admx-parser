@@ -1,174 +1,174 @@
-IE10
-IE10WIN8
-IE11
-IE11WIN10
-IE11WIN10_1607
-IE11WIN10_1703
-IE11WIN8ONLY
-IE4ONLY
-IE5
-IE5_6
-IE5_7
-IE5_8
-IE5_9
-IE5_NONVISTA
-IE5ONLY
-IE6ONLY
-IE6SP1
-IE6SP2
-IE6SP2_IE7
-IE6SP2_IE8
-IE6SRVSP1
-IE6SRVSP1_NONVISTA
-IE6SRVSP1ONLY
-IE7
-IE7_10
-IE7_8
-IE7_NONVISTA
-IE7ONLY
-IE7VISTA
-IE8
-IE8_10
-IE8ONLY
-IE9
-IE9_IE11NONWIN10
-INTERNET_BROWSER_RS3
-INTERNET_BROWSER_RS4
-INTERNET_BROWSER_RS5
-INTERNET_BROWSER_WIN10
-INTERNET_BROWSER_WIN10RS3RELEASE
-INTERNET_BROWSER_WIN10V1511
-INTERNET_BROWSER_WIN10V1607
-INTERNET_BROWSER_WIN10V1703
+IE10 - At least Internet Explorer 10.0
+IE10WIN8 - At least Internet Explorer 10.0 on Windows 8
+IE11 - At least Internet Explorer 11.0
+IE11WIN10 - At least Internet Explorer 11.0 on Windows 10
+IE11WIN10_1607 - At least Internet Explorer 11.0 on Windows 10, vertion 1607 or later
+IE11WIN10_1703 - At least Internet Explorer 11.0 on Windows 10, version 1703 or later
+IE11WIN8ONLY - Only Internet Explorer 11.0 on Windows 8.1
+IE4ONLY - Only Internet Explorer 4.0
+IE5 - At least Internet Explorer 5.0
+IE5_6 - Only Internet Explorer 5.0 and Internet Explorer 6.0
+IE5_7 - Only Internet Explorer 5.0 through Internet Explorer 7.0
+IE5_8 - Only Internet Explorer 5.0 through Internet Explorer 8.0
+IE5_9 - Only Internet Explorer 5.0 through Internet Explorer 9.0
+IE5_NONVISTA - At least Internet Explorer 5.0. Not supported on Windows Vista
+IE5ONLY - Only Internet Explorer 5.0
+IE6ONLY - Only Internet Explorer 6.0
+IE6SP1 - At least Internet Explorer 6 Service Pack 1
+IE6SP2 - At least Internet Explorer 6.0 in Windows XP with Service Pack 2 or Windows Server 2003 with Service Pack 1
+IE6SP2_IE7 - Only Internet Explorer 6.0 in Windows XP Service Pack 2 or Windows Server 2003 Service Pack 1 through IE7 inclusive
+IE6SP2_IE8 - Only Internet Explorer 6.0 in Windows XP Service Pack 2 or Windows Server 2003 Service Pack 1 through IE8 inclusive
+IE6SRVSP1 - At least Internet Explorer 6.0 in Windows 2003 Service Pack 1
+IE6SRVSP1_NONVISTA - At least Internet Explorer 6.0 in Windows 2003 Service Pack 1. Not supported on Windows Vista
+IE6SRVSP1ONLY - Only Internet Explorer 6.0 in Windows 2003 Service Pack 1
+IE7 - At least Internet Explorer 7.0
+IE7_10 - Internet Explorer 7.0 to Internet Explorer 10.0
+IE7_8 - Only Internet Explorer 7.0 and Internet Explorer 8.0
+IE7_NONVISTA - At least Internet Explorer 7.0. Not supported on Windows Vista
+IE7ONLY - Only Internet Explorer 7.0
+IE7VISTA - At least Internet Explorer 7.0 in Windows Vista
+IE8 - At least Internet Explorer 8.0
+IE8_10 - Internet Explorer 8.0 to Internet Explorer 10.0
+IE8ONLY - Only Internet Explorer 8.0
+IE9 - At least Internet Explorer 9.0
+IE9_IE11NONWIN10 - Only Internet Explorer 9.0 through 11.0. Not supported on Windows 10
+INTERNET_BROWSER_RS3 - Microsoft Edge on Windows 10, Version 1708 or later
+INTERNET_BROWSER_RS4 - Microsoft Edge on Windows 10, Version 1803 or later
+INTERNET_BROWSER_RS5 - Microsoft Edge on Windows 10, Version 1809 or later
+INTERNET_BROWSER_WIN10 - Microsoft Edge on Windows 10 or later
+INTERNET_BROWSER_WIN10RS3RELEASE - Microsoft Edge on Windows 10, Version 1709 or later
+INTERNET_BROWSER_WIN10V1511 - Microsoft Edge on Windows 10, Version 1511 or later
+INTERNET_BROWSER_WIN10V1607 - Microsoft Edge on Windows 10, Version 1607 or later
+INTERNET_BROWSER_WIN10V1703 - Microsoft Edge on Windows 10, Version 1703 or later
 MicrosoftWindowsVista_SP1
-MSI15
-MSI30
-MSI40
-MSI45
-NetMeeting3
-TS_1903_TO_2004
-TS_ONLY_LEGACY
-TS_ONLY_Windows7_OR_SERVER2K8R2
-TS_Vista_SP1
-TS_Win2k
-TS_Win2k3_Sp1
-TS_Win2k3_Sp1_Only
-TS_Win2k3_Sp2
-TS_Windows7_OR_SERVER2K8R2_SP1
-TS_Windows7_Server
-TS_Windows8_Enterprise_AND_Server
-TS_Windows8_or_ARM
-TS_WindowsServer2008OrWin7
-TS_WindowsXP_Win2K3_only
-Vista_through_Win7
-WIN10_RS1
-Win2k
-Win2kOnly
-Win2kSP1
-Win2kSP1_WindowsPreVista
-Win2kSP3
-Win2kSP3_Or_XPSP1
-WIN7
-Win7UntilThreshold
-Windows_10_0
+MSI15 - Microsoft Windows XP or Windows 2000 with Windows Installer v2.0
+MSI30 - Windows Installer v3.0
+MSI40 - Windows Installer v4.0
+MSI45 - Windows Installer v4.5
+NetMeeting3 - at least Windows NetMeeting v3.0
+TS_SUPPORTED_1903_TO_2004 - Windows 10 Version 1903, Windows 10 Version 1909, and Windows 10 Version 2004
+TS_SUPPORTED_ONLY_LEGACY - Windows Server 2008 R2, Windows Server 2008, Windows Server 2003, Windows 7, Windows Vista, and Windows XP
+TS_SUPPORTED_ONLY_Windows7_OR_SERVER2K8R2 - Windows 7 or Windows Server 2008 R2 (and their subsequent Service Packs) only
+TS_SUPPORTED_Vista_SP1 - At least Windows Vista with Service Pack 1
+TS_SUPPORTED_Win2k - At least Windows 2000 Terminal Services
+TS_SUPPORTED_Win2k3_Sp1 - At least Windows Server 2003 with Service Pack 1
+TS_SUPPORTED_Win2k3_Sp1_Only - Windows Server 2003 with Service Pack 1 only
+TS_SUPPORTED_Win2k3_Sp2 - At least Windows Server 2003 with Service Pack 2
+TS_SUPPORTED_Windows7_OR_SERVER2K8R2_SP1 - At least Windows 7 with Service Pack 1 or Windows Server 2008 R2 with Service Pack 1
+TS_SUPPORTED_Windows7_Server - At least Windows Server 2008 R2
+TS_SUPPORTED_Windows8_Enterprise_AND_Server - At least Windows 8 Enterprise or Windows Server 2012
+TS_SUPPORTED_Windows8_or_ARM - At least Windows 8 or Windows RT
+TS_SUPPORTED_WindowsServer2008OrWin7 - At least Windows Server 2008 or Windows 7
+TS_SUPPORTED_WindowsXP_Win2K3_only - At least Windows XP and Windows Server 2003 only
+Vista_through_Win7 - Supported Windows Vista through Windows 7
+WIN10_RS1 - At least Windows 10 Redstone
+Win2k - At least Windows 2000
+Win2kOnly - Windows 2000 only
+Win2kSP1 - At least Windows 2000 Service Pack 1
+Win2kSP1_WindowsPreVista - Microsoft Windows Server 2003, Windows XP, and Windows 2000 Service Pack 1 operating systems only
+Win2kSP3 - At least Windows 2000 Service Pack 3
+Win2kSP3_Or_XPSP1 - Windows XP Professional Service Pack 1 or At least Windows 2000 Service Pack 3
+WIN7 - At least Microsoft Windows 7 or Windows Server 2008 family
+Win7UntilThreshold - At least Windows Server 2008 R2 or Windows 7. Not supported on Windows 10 or later
+Windows_10_0 - At least Windows Server 2016, Windows 10
 Windows_10_0_19H1
-Windows_10_0_20H1
-Windows_10_0_20H1_NOSERVER
-Windows_10_0_20H2_SERVER_20H2
-Windows_10_0_21H2
-Windows_10_0_21H2_NOSERVER
+Windows_10_0_20H1 - At least Windows Server 2019, Windows 10 Version 2004
+Windows_10_0_20H1_NOSERVER - At least Windows 10 Version 2004
+Windows_10_0_20H2_SERVER_20H2 - At least Windows Server 20H2, Windows 10 Version 20H2
+Windows_10_0_21H2 - At least Windows Server 2016, Windows 10 Version 2106
+Windows_10_0_21H2_NOSERVER - At least Windows 10 Version 2106
 Windows_10_0_22H2
-Windows_10_0_NOARM
-Windows_10_0_NOSERVER
-Windows_10_0_RS1
-Windows_10_0_RS2
-Windows_10_0_RS2ToVista
-Windows_10_0_RS3
-Windows_10_0_RS3ToVista
-Windows_10_0_RS3ToWindows7
-Windows_10_0_RS4
-Windows_10_0_RS5
-Windows_10_0_RS6
-Windows_10_0_RS6_NOSERVER
-Windows_10_0_RS7
-Windows_10_0_RS7_NOSERVER
-Windows_10_0_SERVER
-Windows_10_0_UP_TO_RS2
+Windows_10_0_NOARM - At least Windows Server 2016 or Windows 10
+Windows_10_0_NOSERVER - At least Windows 10
+Windows_10_0_RS1 - At least Windows Server 2016, Windows 10 Version 1607
+Windows_10_0_RS2 - At least Windows Server 2016, Windows 10 Version 1703
+Windows_10_0_RS2ToVista - Windows Server 2016 Version 1703, Windows 10 Version 1703, Windows 10, Windows 8.1, Windows 8, Windows 7, and Windows Vista only
+Windows_10_0_RS3 - At least Windows Server 2016, Windows 10 Version 1709
+Windows_10_0_RS3ToVista - Windows Server 2016 Version 1709, Windows 10 Version 1709, Windows Server 2016 Version 1703, Windows 10 Version 1703, Windows 10, Windows 8.1, Windows 8, Windows 7, and Windows Vista only
+Windows_10_0_RS3ToWindows7 - Windows Server 2016 Version 1709, Windows 10 Version 1709, Windows Server 2016 Version 1703, Windows 10 Version 1703, Windows 10, Windows 8.1, Windows 8, and Windows 7 only
+Windows_10_0_RS4 - At least Windows Server 2016, Windows 10 Version 1803
+Windows_10_0_RS5 - At least Windows Server 2016, Windows 10 Version 1809
+Windows_10_0_RS6 - At least Windows Server 2016, Windows 10 Version 1903
+Windows_10_0_RS6_NOSERVER - At least Windows 10 Version 1903
+Windows_10_0_RS7 - At least Windows Server 2016, Windows 10 Version 1909
+Windows_10_0_RS7_NOSERVER - At least Windows 10 Version 1909
+Windows_10_0_SERVER - At least Windows Server 2016
+Windows_10_0_UP_TO_RS2 - Windows Server 2016, Windows 10 up to Version 1703
 Windows_11_0_22H1
-Windows_11_0_22H2
-Windows_11_0_22H2_NOSERVER
-Windows_11_0_23H2
-Windows_11_0_24H2
-Windows_11_0_NOSERVER
-Windows_11_0_NOSERVER_ENTERPRISE_EDUCATION_PRO_SANDBOX
-Windows_11_0_SE
-Windows_6_3
-Windows_6_3_NOARM
-Windows_6_3_Update2
-Windows_6_3only
-Windows_6_3To2k
-Windows_6_3ToVista
-Windows_6_3ToXPSP1_Or_Win2kSP3
-Windows_Server_2022_Windows_11_0
-Windows_Server_2025_Windows_11_0
-Windows_Server_2025_Windows_11_0_24H2
-Windows10
-Windows7
-Windows7Only
-Windows7OrBITS35
-Windows7OrBITS4
-Windows7To1122H2
-Windows7To2k
-Windows7To2kAndWindows10
-Windows7ToVista
-Windows7ToVistaAndWindows10
-Windows7ToXP
-Windows7ToXPAndWindows10
-Windows8
-Windows8_Or_IE10
-Windows8_Or_Windows_6_3_Only
-Windows81To2k
-Windows8NoARM
-Windows8OrBITS5
-WindowsLonghornServerDesktopExperienceOrVista
-WindowsNET
-WindowsNET_Enterprise
-WindowsNET_XP
-WindowsNETOnly
-WindowsPreVista
-WindowsServer_And_XPproTo7
+Windows_11_0_22H2 - At least Windows 11 Version 22H2
+Windows_11_0_22H2_NOSERVER - At least Windows 11 Version 22H2
+Windows_11_0_23H2 - At least Windows 11 Version 23H2
+Windows_11_0_24H2 - At least Windows 11 Version 24H2
+Windows_11_0_NOSERVER - At least Windows 11
+Windows_11_0_NOSERVER_ENTERPRISE_EDUCATION_PRO_SANDBOX - At least Windows 11 Pro, Enterprise, or Education with Windows Sandbox
+Windows_11_0_SE - Windows 11 SE
+Windows_6_3 - At least Windows Server 2012 R2, Windows 8.1 or Windows RT 8.1
+Windows_6_3_NOARM - At least Windows Server 2012 R2 or Windows 8.1
+Windows_6_3_Update2 - At least Windows 8.1 Update 2
+Windows_6_3only - Windows Server 2012 R2, Windows 8.1 or Windows RT 8.1 only
+Windows_6_3To2k - Windows Server 2012 R2, Windows 8.1, Windows RT 8.1, Windows Server 2008, Windows Server 2003, Windows 7, Windows Vista, Windows XP, and Windows 2000
+Windows_6_3ToVista - Windows Server 2012 R2, Windows 8.1, Windows Server 2012, Windows 8, Windows Server 2008, Windows 7, and Windows Vista
+Windows_6_3ToXPSP1_Or_Win2kSP3 - Windows Server 2012 R2, Windows 8.1, Windows RT 8.1, Windows Server 2008, Windows Server 2003, Windows 7, Windows Vista, Windows XP Professional Service Pack 1 and Windows 2000 Service Pack 3
+Windows_Server_2022_Windows_11_0 - At least Windows Server 2022, Windows 11
+Windows_Server_2025_Windows_11_0 - At least Windows Server 2025, Windows 11
+Windows_Server_2025_Windows_11_0_24H2 - At least Windows Server 2025, Windows 11 24H2
+Windows10 - At least Microsoft Windows 10 or later
+Windows7 - At least Windows Server 2008 R2 or Windows 7
+Windows7Only - Windows Server 2008 R2 and Windows 7
+Windows7OrBITS35 - Windows 7 or computers with BITS 3.5 installed.
+Windows7OrBITS4 - At least Windows 7 or Windows Server 2008 R2*
+Windows7To1122H2 - At least Windows Server 2008 R2 or Windows 7 through Windows Server 2022 or Windows 11 Version 22H2
+Windows7To2k - Windows Server 2008, Windows Server 2003, Windows 7, Windows Vista, Windows XP, and Windows 2000
+Windows7To2kAndWindows10 - Windows Server 2008, Windows Server 2003, Windows 7, Windows Vista, Windows XP, Windows 2000, and Windows 10
+Windows7ToVista - Windows Server 2008, Windows 7, and Windows Vista
+Windows7ToVistaAndWindows10 - Windows Server 2008, Windows 7, Windows Vista, and Windows 10
+Windows7ToXP - Windows Server 2008, Windows Server 2003, Windows 7, Windows Vista, and Windows XP
+Windows7ToXPAndWindows10 - Windows Server 2008, Windows Server 2003, Windows 7, Windows Vista, Windows XP, and Windows 10
+Windows8 - At least Windows Server 2012, Windows 8 or Windows RT
+Windows8_Or_IE10 - At least Windows Server 2012, Windows 8 or Windows RT or at least Internet Explorer 10
+Windows8_Or_Windows_6_3_Only - Windows Server 2012, Windows 8, Windows RT, Windows Server 2012 R2, Windows 8.1 or Windows RT 8.1 only
+Windows81To2k - At least Windows 2000 through Windows 8.1 or Windows Server 2012 R2
+Windows8NoARM - At least Windows Server 2012 or Windows 8
+Windows8OrBITS5 - Windows 8 or Windows Server 2012 or Windows RT or computers with BITS 5 installed.
+WindowsLonghornServerDesktopExperienceOrVista - Windows Server 2008 with Desktop Experience installed or Windows Vista
+WindowsNET - At least Windows Server 2003
+WindowsNET_Enterprise - At least Windows Server 2003, Enterprise Edition
+WindowsNET_XP - Windows Server 2003 and Windows XP only
+WindowsNETOnly - Windows Server 2003 only
+WindowsPreVista - Windows Server 2003, Windows XP, and Windows 2000 only
+WindowsServer_And_XPproTo7 - Windows Server 2003 and versions of Windows from Windows XP Professional through Windows 7.
 WindowsServer2008
-WindowsServer2008OrWindowsServer2008R2Only
-WindowsUpdate
-WindowsVista
-WindowsVistaOnly
-WindowsVistaOrServer2008Only
-WindowsVistaSP1
-WindowsVistaTo2k
-WindowsVistaTo7
-WindowsVistaToXP
-WindowsVistaToXPSP2
-WindowsXP
-WindowsXP_SP1_W2K_SP4_NETSERVER
-WindowsXP_SP2_W2K_SP5_NETSERVER_SP1
-WindowsXPOnly
-WindowsXPOrServerOnly
-WindowsXPSP1
-WindowsXPSP2
-WindowsXPSP2_Or_WindowsNET
-WindowsXPSP2_Or_WindowsNETSP1
-WindowsXPSP2_WindowsNET
-WindowsXPSP2WindowsNETSP1orBITS20
-WindowsXPWindowsNETorBITS15
-WU_Server2016_Through_Server2022_Or_Windows10
-WU_Win2kSP3_Or_XPSP1_NoWinRT
-WU_Win2kSP3_Or_XPSP1_Through_Win81_or_Server2012R2
-WU_Windows_Server_2019_Windows_10_0_1809
-WU_Windows_Server_2022_Windows_10_0_2004
-WU_Windows7_To_Win2kSP3_Or_XPSP1
-WU_Windows7ToXPSP2
-WU_WindowsVista_Through_Win81_or_Server2012R2
-WU_WindowsXPSP1_NoWinRT
-WU_WinServer2025_Win1021H2_Win1122H2
-WU_XPSP1_or_Win2kSP3_AUOption7_Server2016
-XPSP1_through_Server_2008_RTM
+WindowsServer2008OrWindowsServer2008R2Only - Windows Server 2008 and Windows Server 2008 R2 operating systems only
+WindowsUpdate - At least Windows Server 2003 operating systems, Windows XP Professional Service Pack 1, or Windows 2000 Service Pack 3
+WindowsVista - At least Windows Vista
+WindowsVistaOnly - Windows Vista only
+WindowsVistaOrServer2008Only - Windows Server 2008 and Windows Vista
+WindowsVistaSP1 - At least Windows Vista Service Pack 1
+WindowsVistaTo2k - Windows Server 2008, Windows Server 2003, Windows Vista, Windows XP, and Windows 2000
+WindowsVistaTo7 - Windows operating systems from Windows Vista through Windows 7
+WindowsVistaToXP - Windows Server 2008, Windows Server 2003, Windows Vista, and Windows XP
+WindowsVistaToXPSP2 - Windows Server 2008, Windows Server 2003, Windows Vista, and Windows XP SP2
+WindowsXP - At least Windows Server 2003 operating systems or Windows XP Professional
+WindowsXP_SP1_W2K_SP4_NETSERVER - At least Windows Server 2003 operating systems, Windows XP Professional Service Pack 1, or Windows 2000 Service Pack 4
+WindowsXP_SP2_W2K_SP5_NETSERVER_SP1 - At least Windows Server 2003 operating systems Service Pack 1, Windows XP Professional Service Pack 2, or Windows 2000 Service Pack 5
+WindowsXPOnly - Windows XP Professional only
+WindowsXPOrServerOnly - Windows Server 2003 and Windows XP only
+WindowsXPSP1 - At least Windows Server 2003 operating systems or Windows XP Professional with SP1
+WindowsXPSP2 - At least Windows XP Professional with SP2
+WindowsXPSP2_Or_WindowsNET - At least Windows Server 2003 operating systems or Windows XP Professional with SP2
+WindowsXPSP2_Or_WindowsNETSP1 - At least Windows Server 2003 operating systems with SP1 or Windows XP Professional with SP2
+WindowsXPSP2_WindowsNET - Microsoft Windows XP Professional with SP2 and Windows Server 2003 family only
+WindowsXPSP2WindowsNETSP1orBITS20 - Windows XP SP2 or Windows Server 2003 SP1, or computers with BITS 2.0 installed.
+WindowsXPWindowsNETorBITS15 - Windows XP or Windows Server 2003, or computers with BITS 1.5 installed.
+WU_SUPPORTED_Server2016_Through_Server2022_Or_Windows10 - Windows Server 2016 through Windows Server 2022, or Windows 10?
+WU_SUPPORTED_Win2kSP3_Or_XPSP1_NoWinRT - At least Windows XP Professional Service Pack 1 or Windows 2000 Service Pack 3, excluding Windows RT
+WU_SUPPORTED_Win2kSP3_Or_XPSP1_Through_Win81_or_Server2012R2 - At least Windows XP Professional Service Pack 1 or At least Windows 2000 Service Pack 3 through Windows 8.1 or Windows Server 2012 R2 with most current service pack. Not supported on Windows 10 and above.
+WU_SUPPORTED_Windows_Server_2019_Windows_10_0_1809 - At least Windows Server 2019, or Windows 10 Version 1809?
+WU_SUPPORTED_Windows_Server_2022_Windows_10_0_2004 - At least Windows Server 2022, or Windows 10 Version 2004?
+WU_SUPPORTED_Windows7_To_Win2kSP3_Or_XPSP1 - Windows 7, Windows Server 2008 R2, Windows Vista, Windows Server 2003, Windows XP SP2, Windows XP SP1 , Windows 2000 SP4, Windows 2000 SP3
+WU_SUPPORTED_Windows7ToXPSP2 - Windows 7, Windows Server 2008 R2, Windows Vista, Windows XP SP2
+WU_SUPPORTED_WindowsVista_Through_Win81_or_Server2012R2 - At least Windows Vista through Windows 8.1 or Windows Server 2012 R2 with most current service pack. Not supported on Windows 10 and above.
+WU_SUPPORTED_WindowsXPSP1_NoWinRT - At least Windows Server 2003 operating systems or Windows XP Professional with SP1, excluding Windows RT
+WU_SUPPORTED_WinServer2025_Win1021H2_Win1122H2 - At least Windows Server 2025, Windows 10 Version 21H2, or Windows 11 Version 22H2
+WU_SUPPORTED_XPSP1_or_Win2kSP3_AUOption7_SUPPORTED_Server2016 - Windows XP Professional Service Pack 1 or At least Windows 2000 Service Pack 3 Option 7 only supported on servers of at least Windows Server 2016 edition?
+XPSP1_through_Server_2008_RTM - Supported Windows XP SP1 through Windows Server 2008 RTM

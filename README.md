@@ -10,6 +10,8 @@ This tool scans a Windows PolicyDefinitions directory (ADMX/ADML) and exports ev
 - Automatically discovers language folders, or use `--language` to use specific ones.
 - Supports ignoring specific ADMX files, filtering by policy class (`Machine`/`User`), category name, or free-text policy search.
 - Generates pretty JSON (or YAML) by default, `--compress` only affects JSON exports.
+- Moves the `Class` directly into the `KeyPath` (moves `KeyName` into `KeyPath`, if `Elements` have no `Data` for it).
+- Adds meaning for `Supported` keys ([`Supported.txt`](https://github.com/5Noxi/admx-parser/blob/main/assets/Supported.txt))
 
 ## Requirements
 
@@ -19,7 +21,7 @@ This tool scans a Windows PolicyDefinitions directory (ADMX/ADML) and exports ev
 ## Usage
 
 ```powershell
-python admx-parser.py [OPTIONS]
+python admx-parser.py [FLAGS]
 ```
 
 ### CLI Flags
@@ -62,10 +64,9 @@ python admx-parser.py --class Machine --category Edge --compress
   "CategoryName": "AppPrivacy",
   "PolicyName": "LetAppsAccessAccountInfo",
   "NameSpace": "Microsoft.Policies.AppPrivacy",
-  "Supported": "Windows_10_0",
+  "Supported": "Windows_10_0 - At least Windows Server 2016, Windows 10",
   "DisplayName": "Let Windows apps access account information",
-  "ExplainText": "This policy setting specifies whether Windows apps can access account
-    information...",
+  "ExplainText": "This policy setting specifies whether Windows apps can access account information.",
   "KeyPath": [
     "HKLM\\Software\\Policies\\Microsoft\\Windows\\AppPrivacy"
   ],
@@ -84,10 +85,10 @@ python admx-parser.py --class Machine --category Edge --compress
   CategoryName: AppPrivacy
   PolicyName: LetAppsAccessAccountInfo
   NameSpace: Microsoft.Policies.AppPrivacy
-  Supported: Windows_10_0
+  Supported: Windows_10_0 - At least Windows Server 2016, Windows 10
   DisplayName: Let Windows apps access account information
   ExplainText: This policy setting specifies whether Windows apps can access account
-    information...
+    information.
   KeyPath:
   - HKLM\Software\Policies\Microsoft\Windows\AppPrivacy
   Elements:
