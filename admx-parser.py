@@ -1,5 +1,5 @@
 # (C) 2025 Noverse. All Rights Reserved.
-# https://github.com/5Noxi
+# https://github.com/nohuto
 # https://discord.gg/E2ybG4j9jU
 
 import argparse, io, json, logging, re

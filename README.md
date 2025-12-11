@@ -1,6 +1,6 @@
 # Windows ADMX Parser
 
-This tool scans a Windows PolicyDefinitions directory (ADMX/ADML) and exports every policy definition into a structured JSON or YAML file. This was made for being able to quickly search for any string in LGPE to see the data/value/key/description. I personally used it in the [win-config](https://github.com/5Noxi/win-config) project for several options. This small parser project was inspired by the [WindowsAdmxParser](https://github.com/innovatodev/WindowsAdmxParser) powershell module. However, since it's not entirely correct (sometimes `KeyName` is displayed instead of `ValueName`), the class is not inserted directly into `KeyPath` and `KeyNames` is not inserted directly into `KeyPath`.
+This tool scans a Windows PolicyDefinitions directory (ADMX/ADML) and exports every policy definition into a structured JSON or YAML file. This was made for being able to quickly search for any string in LGPE to see the data/value/key/description. I personally used it in the [win-config](https://github.com/nohuto/win-config) project for several options. This small parser project was inspired by the [WindowsAdmxParser](https://github.com/innovatodev/WindowsAdmxParser) powershell module. However, since it's not entirely correct (sometimes `KeyName` is displayed instead of `ValueName`), the class is not inserted directly into `KeyPath` and `KeyNames` is not inserted directly into `KeyPath`.
 
 > [!CAUTION]
 > An issue that occurred while creating the parser is that a value was defined outside of `Elements` and the same value was defined again in `Elements`. Elements does not contain any data for the value outside the elements list, which is handled in the tool by adding the value to the end of the keypath. However, there're isolated cases where this isn't correct (so far only where both values had the same names). I've currently solved this by deleting the upper value.
@@ -11,7 +11,7 @@ This tool scans a Windows PolicyDefinitions directory (ADMX/ADML) and exports ev
 - Supports ignoring specific ADMX files, filtering by policy class (`Machine`/`User`), category name, or free-text policy search.
 - Generates pretty JSON (or YAML) by default, `--compress` only affects JSON exports.
 - Moves the `Class` directly into the `KeyPath` (moves `KeyName` into `KeyPath`, if `Elements` have no `Data` for it).
-- Adds meaning for `Supported` keys ([`Supported.txt`](https://github.com/5Noxi/admx-parser/blob/main/assets/Supported.txt))
+- Adds meaning for `Supported` keys ([`Supported.txt`](https://github.com/nohuto/admx-parser/blob/main/assets/Supported.txt))
 
 ## Requirements
 
@@ -55,8 +55,8 @@ python admx-parser.py --class Machine --category Edge --compress
 
 ## Output Structure
 
-> [assets\Policies.json](https://github.com/5Noxi/admx-parser/blob/main/assets/Policies.json)  
-> [assets\Policies.yaml](https://github.com/5Noxi/admx-parser/blob/main/assets/Policies.yaml)
+> [assets\Policies.json](https://github.com/nohuto/admx-parser/blob/main/assets/Policies.json)  
+> [assets\Policies.yaml](https://github.com/nohuto/admx-parser/blob/main/assets/Policies.yaml)
 
 ```json
 {
