@@ -1,4 +1,4 @@
-# (C) 2025 Noverse. All Rights Reserved.
+# (C) 2026 Noverse (nohuto). All Rights Reserved.
 # https://github.com/nohuto
 # https://discord.gg/E2ybG4j9jU
 
@@ -114,12 +114,12 @@ def build_argument_parser() -> argparse.ArgumentParser:
     parser.add_argument(
         "--categories-output",
         type=Path,
-        help="Optional path to save resolved category metadata JSON.",
+        help="Optional path to save category metadata JSON.",
     )
     parser.add_argument(
         "--compress",
         action="store_true",
-        help="Emit minified JSON output (ignored when --format yaml).",
+        help="Minified JSON output (ignored when --format yaml).",
     )
     return parser
 
@@ -807,7 +807,7 @@ def main(argv: Optional[Sequence[str]] = None) -> int:
         pretty_output = True
     output_path = args.output
     if output_path is None:
-        output_path = Path("Policies.yaml" if output_format == "yaml" else "Policies.json")
+        output_path = Path("policies.yaml" if output_format == "yaml" else "policies.json")
     write_payload(output_path, policies, fmt=output_format, pretty=pretty_output)
 
     categories_output_path = args.categories_output
