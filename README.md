@@ -38,6 +38,7 @@ python admx-parser.py [FLAGS]
 | `--format {json,yaml}` | Output format | `json` |
 | `--compress` | Write minified JSON (ignored for YAML) | Pretty |
 | `--output PATH` | Custom destination file | `Policies.json`/`Policies.yaml` (in current dir) |
+| `--categories-output PATH` | Custom destination for resolved category metadata JSON | `PolicyCategories.json` next to output |
 | `-h, --help` | Shows flags from above | - |
 
 ### Examples
@@ -51,11 +52,15 @@ python admx-parser.py --format yaml --ignore inetres --ignore WindowsUpdate
 
 # Machine-only policies under the Edge category, compressed JSON
 python admx-parser.py --class Machine --category Edge --compress
+
+# Website assets: full policy set plus the category path index
+python admx-parser.py --include-obsolete --output assets/policies.json --categories-output assets/policy-categories.json
 ```
 
 ## Output Structure
 
-> [assets\Policies.json](https://github.com/nohuto/admx-parser/blob/main/assets/Policies.json)  
+> [assets\policies.json](https://github.com/nohuto/admx-parser/blob/main/assets/policies.json)  
+> [assets\policy-categories.json](https://github.com/nohuto/admx-parser/blob/main/assets/policy-categories.json)  
 > [assets\Policies.yaml](https://github.com/nohuto/admx-parser/blob/main/assets/Policies.yaml)
 
 ```json

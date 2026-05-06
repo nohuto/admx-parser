@@ -112,6 +112,11 @@ def build_argument_parser() -> argparse.ArgumentParser:
         help="Optional path to save the serialized payload.",
     )
     parser.add_argument(
+        "--categories-output",
+        type=Path,
+        help="Optional path to save resolved category metadata JSON.",
+    )
+    parser.add_argument(
         "--compress",
         action="store_true",
         help="Emit minified JSON output (ignored when --format yaml).",
@@ -156,6 +161,78 @@ class AdmxParser:
             LOG.info(f"{admx_path.name}: {len(file_records)} policies")
             records.extend(file_records)
         return records
+
+    def parse_categories(self) -> Dict[str, object]:
+        categories: Dict[str, Dict[str, object]] = {}
+        for admx_path in sorted(self.definitions_path.glob("*.admx")):
+            base_name = admx_path.stem
+            if base_name.lower() in self.ignore_set:
+                LOG.debug(f"Skipping ignored ADMX categories: {admx_path.name}")
+                continue
+            try:
+                tree = _load_xml_tree(admx_path)
+            except et.ParseError as exc:
+                LOG.warning(f"Unable to parse categories in {admx_path.name}: {exc}")
+                continue
+            except LookupError as exc:
+                LOG.warning(f"Unsupported encoding in {admx_path.name}: {exc}")
+                continue
+
+            root = cast(et.Element, tree.getroot())
+            namespace = self._extract_namespace(root)
+            q = lambda tag: f"{{{namespace}}}{tag}" if namespace else tag
+            categories_node = root.find(q("categories"))
+            if categories_node is None:
+                continue
+
+            for category in categories_node.findall(q("category")):
+                name = self._strip_prefix(category.get("name", "")).strip()
+                if not name:
+                    continue
+                display_name = self._clean_text(self._resolve_string(category.get("displayName", ""), base_name)) or name
+                explain_text = self._clean_text(self._resolve_string(category.get("explainText", ""), base_name))
+                parent_ref = ""
+                parent_node = category.find(q("parentCategory"))
+                if parent_node is not None:
+                    parent_ref = self._strip_prefix(parent_node.get("ref", "")).strip()
+                categories[name] = {
+                    "name": name,
+                    "displayName": display_name,
+                    "parent": parent_ref,
+                    "file": admx_path.name,
+                    "explainText": explain_text,
+                }
+
+        self._attach_category_paths(categories)
+        return {
+            "source": str(self.definitions_path),
+            "categoryCount": len(categories),
+            "categories": categories,
+        }
+
+    def _attach_category_paths(self, categories: Dict[str, Dict[str, object]]) -> None:
+        resolved: Dict[str, List[Dict[str, str]]] = {}
+
+        def resolve_path(name: str, stack: Tuple[str, ...] = ()) -> List[Dict[str, str]]:
+            if name in resolved:
+                return resolved[name]
+            category = categories.get(name)
+            if category is None:
+                return [{"name": name, "displayName": name}]
+            current = {
+                "name": str(category.get("name") or name),
+                "displayName": str(category.get("displayName") or name),
+            }
+            parent = str(category.get("parent") or "")
+            if parent and parent != name and parent in categories and parent not in stack:
+                path = [*resolve_path(parent, (*stack, name)), current]
+            else:
+                path = [current]
+            resolved[name] = path
+            return path
+
+        for name, category in categories.items():
+            category["path"] = resolve_path(name)
 
     def _ensure_supported_index(self) -> None:
         if self._supported_index_built:
@@ -699,6 +776,11 @@ def write_payload(path: Path, payload: List[Dict[str, object]], *, fmt: str, pre
         serialized = _serialize_json(payload, pretty=pretty)
     path.write_text(serialized, encoding="utf-8")
 
+def write_json_payload(path: Path, payload: object, *, pretty: bool) -> None:
+    path.parent.mkdir(parents=True, exist_ok=True)
+    serialized = json.dumps(payload, indent=2 if pretty else None)
+    path.write_text(serialized, encoding="utf-8")
+
 def main(argv: Optional[Sequence[str]] = None) -> int:
     parser = build_argument_parser()
     args = parser.parse_args(argv)
@@ -715,6 +797,7 @@ def main(argv: Optional[Sequence[str]] = None) -> int:
         policy_filter=args.policy_filter,
     )
     policies = admx_parser.parse()
+    categories = admx_parser.parse_categories()
 
     pretty_output = not args.compress
     output_format = args.format
@@ -727,7 +810,13 @@ def main(argv: Optional[Sequence[str]] = None) -> int:
         output_path = Path("Policies.yaml" if output_format == "yaml" else "Policies.json")
     write_payload(output_path, policies, fmt=output_format, pretty=pretty_output)
 
+    categories_output_path = args.categories_output
+    if categories_output_path is None:
+        categories_output_path = output_path.with_name("PolicyCategories.json")
+    write_json_payload(categories_output_path, categories, pretty=pretty_output)
+
     print(f"Wrote {len(policies)} policies to {output_path}")
+    print(f"Wrote {categories['categoryCount']} categories to {categories_output_path}")
     print_summary(policies)
 
     return 0
