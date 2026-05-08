@@ -77,7 +77,7 @@ python admx-parser.py --include-obsolete --output assets/policies.json --categor
     "HKLM\\Software\\Policies\\Microsoft\\Windows\\AppPrivacy"
   ],
   "Elements": [
-    { "Type": "Enum", "ValueName": "LetAppsAccessAccountInfo", "Id": "LetAppsAccessAccountInfo_Enum", "Items": [
+    { "Type": "Enum", "ValueName": "LetAppsAccessAccountInfo", "Items": [
         { "DisplayName": "User is in control", "Data": "0" },
         { "DisplayName": "Force Allow", "Data": "1" },
         { "DisplayName": "Force Deny", "Data": "2" }
@@ -103,7 +103,6 @@ python admx-parser.py --include-obsolete --output assets/policies.json --categor
   Elements:
   - Type: Enum
     ValueName: LetAppsAccessAccountInfo
-    Id: LetAppsAccessAccountInfo_Enum
     Items:
     - DisplayName: User is in control
       Data: '0'

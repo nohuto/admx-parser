@@ -397,28 +397,45 @@ class AdmxParser:
                     record = {
                         "Type": "Decimal",
                         "ValueName": element.get("valueName"),
-                        "MinValue": element.get("minValue"),
+                        "MinValue": element.get("minValue") or "0",
                         "MaxValue": element.get("maxValue") or element.get("maxvalue"),
                     }
                     self._add_element_metadata(record, element, policy_class)
                     result.append(record)
                 elif tag == "boolean":
-                    true_value = self._extract_simple_value(element.find(q("trueValue")), q)
-                    false_value = self._extract_simple_value(element.find(q("falseValue")), q)
+                    true_node = element.find(q("trueValue"))
+                    false_node = element.find(q("falseValue"))
                     record = {
                         "Type": "Boolean",
                         "ValueName": element.get("valueName"),
-                        "TrueValue": true_value if true_value is not None else "1",
-                        "FalseValue": false_value if false_value is not None else "0",
                     }
+                    true_value = self._extract_simple_value(true_node, q)
+                    false_value = self._extract_simple_value(false_node, q)
+                    if true_node is not None and true_node.find(q("delete")) is not None:
+                        record["TrueAction"] = "Delete"
+                    else:
+                        record["TrueValue"] = true_value if true_value is not None else "1"
+                    if false_node is not None and false_node.find(q("delete")) is not None:
+                        record["FalseAction"] = "Delete"
+                    else:
+                        record["FalseValue"] = false_value if false_value is not None else "0"
                     self._add_element_metadata(record, element, policy_class)
                     result.append(record)
                 elif tag == "enum":
                     items = []
                     for item in element.findall(q("item")):
                         display_name = self._clean_text(self._resolve_string(item.get("displayName", ""), admx_base_name))
+                        item_record = {"DisplayName": display_name}
                         value = self._extract_enum_value(item, q)
-                        items.append({"DisplayName": display_name, "Data": value})
+                        value_node = item.find(q("value"))
+                        if value_node is not None and value_node.find(q("delete")) is not None:
+                            item_record["Action"] = "Delete"
+                        else:
+                            item_record["Data"] = value
+                        value_list = self._parse_value_list(item.find(q("valueList")), q, policy_class)
+                        if value_list:
+                            item_record["ValueList"] = value_list
+                        items.append(item_record)
                     record = {
                         "Type": "Enum",
                         "ValueName": element.get("valueName"),
@@ -461,7 +478,45 @@ class AdmxParser:
             if value is not None:
                 result.append({"Type": label, "Data": value})
 
+        for tag_name, label in (
+            ("enabledList", "EnabledList"),
+            ("disabledList", "DisabledList"),
+        ):
+            list_node = policy.find(q(tag_name))
+            if list_node is None:
+                continue
+            for item in list_node.findall(q("item")):
+                record = {
+                    "Type": label,
+                }
+                record.update(self._parse_value_list_item(item, q, policy_class))
+                result.append(record)
+
         return result
+
+    def _parse_value_list(self, list_node: Optional[Any], q, policy_class: str) -> List[Dict[str, object]]:
+        if list_node is None:
+            return []
+        return [
+            self._parse_value_list_item(item, q, policy_class)
+            for item in list_node.findall(q("item"))
+        ]
+
+    def _parse_value_list_item(self, item: Any, q, policy_class: str) -> Dict[str, object]:
+        record: Dict[str, object] = {
+            "ValueName": item.get("valueName"),
+        }
+        key = item.get("key")
+        if key:
+            record["KeyPath"] = self._build_key_paths(policy_class, key)
+        value_node = item.find(q("value"))
+        if value_node is not None and value_node.find(q("delete")) is not None:
+            record["Action"] = "Delete"
+        else:
+            value = self._extract_simple_value(value_node, q)
+            if value is not None:
+                record["Data"] = value
+        return record
 
     def _add_element_metadata(
         self,
@@ -470,20 +525,14 @@ class AdmxParser:
         policy_class: str,
     ) -> None:
         attr_map = {
-            "id": "Id",
             "required": "Required",
-            "key": "Key",
-            "valuePrefix": "ValuePrefix",
-            "additive": "Additive",
-            "explicitValue": "ExplicitValue",
             "maxLength": "MaxLength",
             "maxStrings": "MaxStrings",
             "expandable": "Expandable",
             "storeAsText": "StoreAsText",
-            "soft": "Soft",
             "clientExtension": "ClientExtension",
         }
-        bool_fields = {"required", "additive", "explicitValue", "expandable", "storeAsText", "soft"}
+        bool_fields = {"required", "expandable", "storeAsText"}
         for source, target in attr_map.items():
             if source not in element.attrib:
                 continue
