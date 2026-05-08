@@ -7,13 +7,11 @@ This tool scans a Windows PolicyDefinitions directory (ADMX/ADML) and exports ev
 
 ## Features
 
-- Automatically discovers language folders, or use `--language` to use specific ones.
-- Supports ignoring specific ADMX files, filtering by policy class (`Machine`/`User`), category name, or free-text policy search.
-- Generates pretty JSON (or YAML) by default, `--compress` only affects JSON exports.
-- Moves the `Class` directly into the `KeyPath` (moves `KeyName` into `KeyPath`, if `Elements` have no `Data` for it).
+- Automatically detects language folders, or use `--language` to use specific ones
+- Supports ignoring specific ADMX files, filtering by policy class (`Machine`/`User`), category name, or free-text policy search
+- Generates pretty JSON (or YAML) by default, `--compress` only affects JSON exports
+- Moves the `Class` directly into the `KeyPath` (moves `KeyName` into `KeyPath`, if `Elements` have no `Data` for it)
 - Adds meaning for `Supported` keys ([`supported.txt`](https://github.com/nohuto/admx-parser/blob/main/assets/Supported.txt))
-- Preserves paragraph breaks in `ExplainText` and normalizes smart double quotes to regular escaped JSON quotes.
-- Exports optional ADMX metadata such as `Id`, `Required`, `KeyPath`, `MaxLength`, `ValuePrefix`, and `ClientExtension` when present.
 
 ## Requirements
 
