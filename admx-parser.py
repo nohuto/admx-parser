@@ -946,7 +946,7 @@ def main(argv: Optional[Sequence[str]] = None) -> int:
 
     categories_output_path = args.categories_output
     if categories_output_path is None:
-        categories_output_path = output_path.with_name("PolicyCategories.json")
+        categories_output_path = output_path.with_name("policyCategories.json")
     write_json_payload(categories_output_path, categories, pretty=pretty_output)
 
     print(f"Wrote {len(policies)} policies to {output_path}")

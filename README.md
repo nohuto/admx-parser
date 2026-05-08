@@ -11,7 +11,7 @@ This tool scans a Windows PolicyDefinitions directory (ADMX/ADML) and exports ev
 - Supports ignoring specific ADMX files, filtering by policy class (`Machine`/`User`), category name, or free-text policy search
 - Generates pretty JSON (or YAML) by default, `--compress` only affects JSON exports
 - Moves the `Class` directly into the `KeyPath` (moves `KeyName` into `KeyPath`, if `Elements` have no `Data` for it)
-- Adds meaning for `Supported` keys ([`supported.txt`](https://github.com/nohuto/admx-parser/blob/main/assets/Supported.txt))
+- Adds meaning for `Supported` keys ([`supported.txt`](https://github.com/nohuto/admx-parser/blob/main/assets/supported.txt))
 
 ## Requirements
 
@@ -37,8 +37,8 @@ python admx-parser.py [FLAGS]
 | `--include-obsolete` | Include obsolete/deprecated policies | Off |
 | `--format {json,yaml}` | Output format | `json` |
 | `--compress` | Minified JSON (ignored for YAML) | Pretty |
-| `--output PATH` | Custom destination file | `Policies.json`/`Policies.yaml` (in current dir) |
-| `--categories-output PATH` | Custom destination for category metadata JSON (I use it for my website/app, if not trying to create a GUI using policies.json then this has no actual use) | `PolicyCategories.json` next to output |
+| `--output PATH` | Custom destination file | `policies.json`/`policies.yaml` (in current dir) |
+| `--categories-output PATH` | Custom destination for category metadata JSON (I use it for my website/app, if not trying to create a GUI using policies.json then this has no actual use) | `policyCategories.json` next to output |
 | `-h, --help` | Shows flags from above | - |
 
 ### Examples

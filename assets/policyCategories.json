@@ -1,6 +1,6 @@
 {
   "source": "C:\\Windows\\PolicyDefinitions",
-  "categoryCount": 409,
+  "categoryCount": 418,
   "categories": {
     "AccountNotifications": {
       "name": "AccountNotifications",
@@ -70,11 +70,11 @@
         }
       ]
     },
-    "AppHVSICat": {
-      "name": "AppHVSICat",
-      "displayName": "Microsoft Defender Application Guard",
+    "AppDeviceInventory": {
+      "name": "AppDeviceInventory",
+      "displayName": "App and Device Inventory",
       "parent": "WindowsComponents",
-      "file": "AppHVSI.admx",
+      "file": "AppDeviceInventory.admx",
       "explainText": "",
       "path": [
         {
@@ -82,8 +82,8 @@
           "displayName": "Windows Components"
         },
         {
-          "name": "AppHVSICat",
-          "displayName": "Microsoft Defender Application Guard"
+          "name": "AppDeviceInventory",
+          "displayName": "App and Device Inventory"
         }
       ]
     },
@@ -353,7 +353,7 @@
       "displayName": "App runtime",
       "parent": "WindowsComponents",
       "file": "AppXRuntime.admx",
-      "explainText": "Contains settings to manage the behavior of Windows Store apps.",
+      "explainText": "Contains settings to manage the behavior of packaged Microsoft Store apps.",
       "path": [
         {
           "name": "WindowsComponents",
@@ -1090,6 +1090,23 @@
         }
       ]
     },
+    "DPAPI": {
+      "name": "DPAPI",
+      "displayName": "DPAPI",
+      "parent": "System",
+      "file": "DPAPI.admx",
+      "explainText": "",
+      "path": [
+        {
+          "name": "System",
+          "displayName": "System"
+        },
+        {
+          "name": "DPAPI",
+          "displayName": "DPAPI"
+        }
+      ]
+    },
     "CAT_DesktopWindowManager": {
       "name": "CAT_DesktopWindowManager",
       "displayName": "Desktop Window Manager",
@@ -1747,6 +1764,27 @@
         {
           "name": "NetworkFonts",
           "displayName": "Fonts"
+        }
+      ]
+    },
+    "CSE_Logging": {
+      "name": "CSE_Logging",
+      "displayName": "Logging and tracing",
+      "parent": "PolicyPolicies",
+      "file": "GroupPolicyPreferencesLogging.admx",
+      "explainText": "Allows you to configure the logging and tracing for Preference components.",
+      "path": [
+        {
+          "name": "System",
+          "displayName": "System"
+        },
+        {
+          "name": "PolicyPolicies",
+          "displayName": "OS Policies"
+        },
+        {
+          "name": "CSE_Logging",
+          "displayName": "Logging and tracing"
         }
       ]
     },
@@ -3753,6 +3791,23 @@
         }
       ]
     },
+    "KbFilter": {
+      "name": "KbFilter",
+      "displayName": "Keyboard Filter",
+      "parent": "System",
+      "file": "KeyboardFilterPolicy.admx",
+      "explainText": "",
+      "path": [
+        {
+          "name": "System",
+          "displayName": "System"
+        },
+        {
+          "name": "KbFilter",
+          "displayName": "Keyboard Filter"
+        }
+      ]
+    },
     "Cat_LanmanServer": {
       "name": "Cat_LanmanServer",
       "displayName": "Lanman Server",
@@ -4298,6 +4353,23 @@
         }
       ]
     },
+    "NTLM": {
+      "name": "NTLM",
+      "displayName": "NTLM",
+      "parent": "System",
+      "file": "Ntlm.admx",
+      "explainText": "",
+      "path": [
+        {
+          "name": "System",
+          "displayName": "System"
+        },
+        {
+          "name": "NTLM",
+          "displayName": "NTLM"
+        }
+      ]
+    },
     "Cat_OfflineFiles": {
       "name": "Cat_OfflineFiles",
       "displayName": "Offline Files",
@@ -4329,119 +4401,6 @@
         {
           "name": "OOBECategory",
           "displayName": "OOBE"
-        }
-      ]
-    },
-    "P2P_Name": {
-      "name": "P2P_Name",
-      "displayName": "Microsoft Peer-to-Peer Networking Services",
-      "parent": "Network",
-      "file": "P2P-pnrp.admx",
-      "explainText": "",
-      "path": [
-        {
-          "name": "Network",
-          "displayName": "Network"
-        },
-        {
-          "name": "P2P_Name",
-          "displayName": "Microsoft Peer-to-Peer Networking Services"
-        }
-      ]
-    },
-    "PNRP_Name": {
-      "name": "PNRP_Name",
-      "displayName": "Peer Name Resolution Protocol",
-      "parent": "P2P_Name",
-      "file": "P2P-pnrp.admx",
-      "explainText": "",
-      "path": [
-        {
-          "name": "Network",
-          "displayName": "Network"
-        },
-        {
-          "name": "P2P_Name",
-          "displayName": "Microsoft Peer-to-Peer Networking Services"
-        },
-        {
-          "name": "PNRP_Name",
-          "displayName": "Peer Name Resolution Protocol"
-        }
-      ]
-    },
-    "PNRP_Global": {
-      "name": "PNRP_Global",
-      "displayName": "Global Clouds",
-      "parent": "PNRP_Name",
-      "file": "P2P-pnrp.admx",
-      "explainText": "",
-      "path": [
-        {
-          "name": "Network",
-          "displayName": "Network"
-        },
-        {
-          "name": "P2P_Name",
-          "displayName": "Microsoft Peer-to-Peer Networking Services"
-        },
-        {
-          "name": "PNRP_Name",
-          "displayName": "Peer Name Resolution Protocol"
-        },
-        {
-          "name": "PNRP_Global",
-          "displayName": "Global Clouds"
-        }
-      ]
-    },
-    "PNRP_LinkLocal": {
-      "name": "PNRP_LinkLocal",
-      "displayName": "Link-Local Clouds",
-      "parent": "PNRP_Name",
-      "file": "P2P-pnrp.admx",
-      "explainText": "",
-      "path": [
-        {
-          "name": "Network",
-          "displayName": "Network"
-        },
-        {
-          "name": "P2P_Name",
-          "displayName": "Microsoft Peer-to-Peer Networking Services"
-        },
-        {
-          "name": "PNRP_Name",
-          "displayName": "Peer Name Resolution Protocol"
-        },
-        {
-          "name": "PNRP_LinkLocal",
-          "displayName": "Link-Local Clouds"
-        }
-      ]
-    },
-    "PNRP_SiteLocal": {
-      "name": "PNRP_SiteLocal",
-      "displayName": "Site-Local Clouds",
-      "parent": "PNRP_Name",
-      "file": "P2P-pnrp.admx",
-      "explainText": "",
-      "path": [
-        {
-          "name": "Network",
-          "displayName": "Network"
-        },
-        {
-          "name": "P2P_Name",
-          "displayName": "Microsoft Peer-to-Peer Networking Services"
-        },
-        {
-          "name": "PNRP_Name",
-          "displayName": "Peer Name Resolution Protocol"
-        },
-        {
-          "name": "PNRP_SiteLocal",
-          "displayName": "Site-Local Clouds"
         }
       ]
     },
@@ -5168,6 +5127,40 @@
         {
           "name": "ScheduledDiagnosticsCategory",
           "displayName": "Scheduled Maintenance"
+        }
+      ]
+    },
+    "Search": {
+      "name": "Search",
+      "displayName": "Search",
+      "parent": "WindowsComponents",
+      "file": "Search.admx",
+      "explainText": "",
+      "path": [
+        {
+          "name": "WindowsComponents",
+          "displayName": "Windows Components"
+        },
+        {
+          "name": "Search",
+          "displayName": "Search"
+        }
+      ]
+    },
+    "SecureBootCategory": {
+      "name": "SecureBootCategory",
+      "displayName": "Secure Boot",
+      "parent": "WindowsComponents",
+      "file": "SecureBoot.admx",
+      "explainText": "",
+      "path": [
+        {
+          "name": "WindowsComponents",
+          "displayName": "Windows Components"
+        },
+        {
+          "name": "SecureBootCategory",
+          "displayName": "Secure Boot"
         }
       ]
     },
@@ -6856,6 +6849,23 @@
         }
       ]
     },
+    "WindowsAI": {
+      "name": "WindowsAI",
+      "displayName": "Windows AI",
+      "parent": "WindowsComponents",
+      "file": "WindowsCopilot.admx",
+      "explainText": "",
+      "path": [
+        {
+          "name": "WindowsComponents",
+          "displayName": "Windows Components"
+        },
+        {
+          "name": "WindowsAI",
+          "displayName": "Windows AI"
+        }
+      ]
+    },
     "WindowsCopilot": {
       "name": "WindowsCopilot",
       "displayName": "Windows Copilot",
@@ -7172,6 +7182,89 @@
         {
           "name": "Remediation",
           "displayName": "Remediation"
+        }
+      ]
+    },
+    "Remediation_BNB": {
+      "name": "Remediation_BNB",
+      "displayName": "Behavioral Network Blocks",
+      "parent": "Remediation",
+      "file": "WindowsDefender.admx",
+      "explainText": "",
+      "path": [
+        {
+          "name": "WindowsComponents",
+          "displayName": "Windows Components"
+        },
+        {
+          "name": "AntiSpywareDefender",
+          "displayName": "Microsoft Defender Antivirus"
+        },
+        {
+          "name": "Remediation",
+          "displayName": "Remediation"
+        },
+        {
+          "name": "Remediation_BNB",
+          "displayName": "Behavioral Network Blocks"
+        }
+      ]
+    },
+    "Remediation_BNB_REP": {
+      "name": "Remediation_BNB_REP",
+      "displayName": "Remote Encryption Protection",
+      "parent": "Remediation_BNB",
+      "file": "WindowsDefender.admx",
+      "explainText": "",
+      "path": [
+        {
+          "name": "WindowsComponents",
+          "displayName": "Windows Components"
+        },
+        {
+          "name": "AntiSpywareDefender",
+          "displayName": "Microsoft Defender Antivirus"
+        },
+        {
+          "name": "Remediation",
+          "displayName": "Remediation"
+        },
+        {
+          "name": "Remediation_BNB",
+          "displayName": "Behavioral Network Blocks"
+        },
+        {
+          "name": "Remediation_BNB_REP",
+          "displayName": "Remote Encryption Protection"
+        }
+      ]
+    },
+    "Remediation_BNB_BFP": {
+      "name": "Remediation_BNB_BFP",
+      "displayName": "Brute-Force Protection",
+      "parent": "Remediation_BNB",
+      "file": "WindowsDefender.admx",
+      "explainText": "",
+      "path": [
+        {
+          "name": "WindowsComponents",
+          "displayName": "Windows Components"
+        },
+        {
+          "name": "AntiSpywareDefender",
+          "displayName": "Microsoft Defender Antivirus"
+        },
+        {
+          "name": "Remediation",
+          "displayName": "Remediation"
+        },
+        {
+          "name": "Remediation_BNB",
+          "displayName": "Behavioral Network Blocks"
+        },
+        {
+          "name": "Remediation_BNB_BFP",
+          "displayName": "Brute-Force Protection"
         }
       ]
     },
@@ -7689,6 +7782,86 @@
         {
           "name": "WMDRMCat",
           "displayName": "Windows Media Digital Rights Management"
+        }
+      ]
+    },
+    "WMPCat": {
+      "name": "WMPCat",
+      "displayName": "Windows Media Player",
+      "parent": "WindowsComponents",
+      "file": "WindowsMediaPlayer.admx",
+      "explainText": "",
+      "path": [
+        {
+          "name": "WindowsComponents",
+          "displayName": "Windows Components"
+        },
+        {
+          "name": "WMPCat",
+          "displayName": "Windows Media Player"
+        }
+      ]
+    },
+    "WMPCatContent": {
+      "name": "WMPCatContent",
+      "displayName": "Playback",
+      "parent": "WMPCat",
+      "file": "WindowsMediaPlayer.admx",
+      "explainText": "",
+      "path": [
+        {
+          "name": "WindowsComponents",
+          "displayName": "Windows Components"
+        },
+        {
+          "name": "WMPCat",
+          "displayName": "Windows Media Player"
+        },
+        {
+          "name": "WMPCatContent",
+          "displayName": "Playback"
+        }
+      ]
+    },
+    "WMPCatUI": {
+      "name": "WMPCatUI",
+      "displayName": "User Interface",
+      "parent": "WMPCat",
+      "file": "WindowsMediaPlayer.admx",
+      "explainText": "",
+      "path": [
+        {
+          "name": "WindowsComponents",
+          "displayName": "Windows Components"
+        },
+        {
+          "name": "WMPCat",
+          "displayName": "Windows Media Player"
+        },
+        {
+          "name": "WMPCatUI",
+          "displayName": "User Interface"
+        }
+      ]
+    },
+    "WMPNETWORK": {
+      "name": "WMPNETWORK",
+      "displayName": "Networking",
+      "parent": "WMPCat",
+      "file": "WindowsMediaPlayer.admx",
+      "explainText": "",
+      "path": [
+        {
+          "name": "WindowsComponents",
+          "displayName": "Windows Components"
+        },
+        {
+          "name": "WMPCat",
+          "displayName": "Windows Media Player"
+        },
+        {
+          "name": "WMPNETWORK",
+          "displayName": "Networking"
         }
       ]
     },
