@@ -12,6 +12,8 @@ This tool scans a Windows PolicyDefinitions directory (ADMX/ADML) and exports ev
 - Generates pretty JSON (or YAML) by default, `--compress` only affects JSON exports.
 - Moves the `Class` directly into the `KeyPath` (moves `KeyName` into `KeyPath`, if `Elements` have no `Data` for it).
 - Adds meaning for `Supported` keys ([`supported.txt`](https://github.com/nohuto/admx-parser/blob/main/assets/Supported.txt))
+- Preserves paragraph breaks in `ExplainText` and normalizes smart double quotes to regular escaped JSON quotes.
+- Exports optional ADMX metadata such as `Id`, `Required`, `KeyPath`, `MaxLength`, `ValuePrefix`, and `ClientExtension` when present.
 
 ## Requirements
 
@@ -68,15 +70,16 @@ python admx-parser.py --include-obsolete --output assets/policies.json --categor
   "File": "AppPrivacy.admx",
   "CategoryName": "AppPrivacy",
   "PolicyName": "LetAppsAccessAccountInfo",
+  "Class": "Machine",
   "NameSpace": "Microsoft.Policies.AppPrivacy",
   "Supported": "Windows_10_0 - At least Windows Server 2016, Windows 10",
   "DisplayName": "Let Windows apps access account information",
-  "ExplainText": "This policy setting specifies whether Windows apps can access account information.",
+  "ExplainText": "This policy setting specifies whether Windows apps can access account information.\n\nIf you enable this policy setting, Windows apps can access account information.",
   "KeyPath": [
     "HKLM\\Software\\Policies\\Microsoft\\Windows\\AppPrivacy"
   ],
   "Elements": [
-    { "Type": "Enum", "ValueName": "LetAppsAccessAccountInfo", "Items": [
+    { "Type": "Enum", "ValueName": "LetAppsAccessAccountInfo", "Id": "LetAppsAccessAccountInfo_Enum", "Items": [
         { "DisplayName": "User is in control", "Data": "0" },
         { "DisplayName": "Force Allow", "Data": "1" },
         { "DisplayName": "Force Deny", "Data": "2" }
@@ -89,16 +92,20 @@ python admx-parser.py --include-obsolete --output assets/policies.json --categor
 - File: AppPrivacy.admx
   CategoryName: AppPrivacy
   PolicyName: LetAppsAccessAccountInfo
+  Class: Machine
   NameSpace: Microsoft.Policies.AppPrivacy
   Supported: Windows_10_0 - At least Windows Server 2016, Windows 10
   DisplayName: Let Windows apps access account information
-  ExplainText: This policy setting specifies whether Windows apps can access account
-    information.
+  ExplainText: |-
+    This policy setting specifies whether Windows apps can access account information.
+
+    If you enable this policy setting, Windows apps can access account information.
   KeyPath:
   - HKLM\Software\Policies\Microsoft\Windows\AppPrivacy
   Elements:
   - Type: Enum
     ValueName: LetAppsAccessAccountInfo
+    Id: LetAppsAccessAccountInfo_Enum
     Items:
     - DisplayName: User is in control
       Data: '0'

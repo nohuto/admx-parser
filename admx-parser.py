@@ -19,6 +19,12 @@ UNICODE_ENCODING_TEXT_PATTERN = re.compile(r"encoding\s*=\s*(?P<quote>['\"])unic
 INLINE_ELEMENTS_PATTERN = re.compile(
     r'(?P<indent>[ \t]*)"Elements": "(?P<marker>__INLINE_ELEMENTS_\d+__)"(?P<trailing>,?)'
 )
+SMART_DOUBLE_QUOTES = str.maketrans({
+    "\u201c": '"',
+    "\u201d": '"',
+    "\u201e": '"',
+    "\u201f": '"',
+})
 
 def _load_xml_tree(path: Path) -> "et.ElementTree[Any]":
     try:
@@ -55,71 +61,71 @@ def _normalize_unicode_encoding(raw: bytes) -> Optional[bytes]:
 
 def build_argument_parser() -> argparse.ArgumentParser:
     parser = argparse.ArgumentParser(
-        description="Parse Windows ADMX/ADML policy definitions into structured data.",
+        description="Parse Windows ADMX/ADML policy definitions into structured data",
     )
     parser.add_argument(
         "-d",
         "--definitions",
         type=Path,
         default=Path(r"C:\Windows\PolicyDefinitions"),
-        help="Path to the PolicyDefinitions directory. Defaults to C:\\Windows\\PolicyDefinitions.",
+        help="Path to the PolicyDefinitions directory. Defaults to C:\\Windows\\PolicyDefinitions",
     )
     parser.add_argument(
         "-l",
         "--language",
         dest="languages",
         action="append",
-        help="Language folder to include (can be added multiple times). Defaults to auto discovery.",
+        help="Language folder to include (can be added multiple times). Defaults to auto discovery",
     )
     parser.add_argument(
         "-i",
         "--ignore",
         dest="ignored_admx",
         action="append",
-        help="ADMX base name to ignore (without extension).",
+        help="ADMX base name to ignore (without extension)",
     )
     parser.add_argument(
         "--class",
         dest="class_filter",
         choices=("Machine", "User"),
         action="append",
-        help="Limit output to the supplied policy class. Can be specified multiple times.",
+        help="Limit output to the supplied policy class. Can be specified multiple times",
     )
     parser.add_argument(
         "--category",
         dest="category_filter",
-        help="Filter policies whose category contains this string (case insensitive).",
+        help="Filter policies whose category contains this string (case insensitive)",
     )
     parser.add_argument(
         "--policy",
         dest="policy_filter",
-        help="Filter policies whose internal or display name contains this string (case insensitive).",
+        help="Filter policies whose internal or display name contains this string (case insensitive)",
     )
     parser.add_argument(
         "--include-obsolete",
         action="store_true",
-        help="Include policies marked as deprecated/obsolete/unsupported.",
+        help="Include policies marked as deprecated/obsolete/unsupported",
     )
     parser.add_argument(
         "--format",
         choices=("json", "yaml"),
         default="json",
-        help="Output format selection for stdout and file output.",
+        help="Output format selection for stdout and file output",
     )
     parser.add_argument(
         "--output",
         type=Path,
-        help="Optional path to save the serialized payload.",
+        help="Optional path to save the serialized payload",
     )
     parser.add_argument(
         "--categories-output",
         type=Path,
-        help="Optional path to save category metadata JSON.",
+        help="Optional path to save category metadata JSON",
     )
     parser.add_argument(
         "--compress",
         action="store_true",
-        help="Minified JSON output (ignored when --format yaml).",
+        help="Minified JSON output (ignored when --format yaml)",
     )
     return parser
 
@@ -137,7 +143,7 @@ class AdmxParser:
     ) -> None:
         self.definitions_path = definitions_path.expanduser().resolve()
         if not self.definitions_path.exists():
-            raise FileNotFoundError(f"Definitions path '{self.definitions_path}' was not found.")
+            raise FileNotFoundError(f"Definitions path '{self.definitions_path}' was not found")
         self.include_obsolete = include_obsolete
         self.ignore_set = {item.lower().rstrip(".admx") for item in (ignored_admx or [])}
         self.languages = self._compute_languages(languages)
@@ -190,7 +196,7 @@ class AdmxParser:
                 if not name:
                     continue
                 display_name = self._clean_text(self._resolve_string(category.get("displayName", ""), base_name)) or name
-                explain_text = self._clean_text(self._resolve_string(category.get("explainText", ""), base_name))
+                explain_text = self._clean_multiline_text(self._resolve_string(category.get("explainText", ""), base_name))
                 parent_ref = ""
                 parent_node = category.find(q("parentCategory"))
                 if parent_node is not None:
@@ -285,8 +291,8 @@ class AdmxParser:
             if self.class_filter and policy_class.lower() not in self.class_filter:
                 continue
 
-            display_name = self._resolve_string(policy.get("displayName", ""), admx_path.stem)
-            explain_text = self._clean_text(self._resolve_string(policy.get("explainText", ""), admx_path.stem))
+            display_name = self._clean_text(self._resolve_string(policy.get("displayName", ""), admx_path.stem))
+            explain_text = self._clean_multiline_text(self._resolve_string(policy.get("explainText", ""), admx_path.stem))
             supported = self._extract_supported(policy, q, admx_path.stem)
             if not self.include_obsolete and self._looks_obsolete(explain_text, supported):
                 continue
@@ -308,7 +314,7 @@ class AdmxParser:
             key_parent_path, derived_tail = self._split_key_tail(raw_key_path)
             explicit_value_name = policy.get("valueName")
 
-            elements = self._parse_elements(policy, q, admx_path.stem)
+            elements = self._parse_elements(policy, q, admx_path.stem, policy_class)
             needs_parent_value = self._elements_require_parent_value(elements)
 
             key_name_field: Optional[str] = None
@@ -338,12 +344,15 @@ class AdmxParser:
                 "File": admx_path.name,
                 "CategoryName": category_name,
                 "PolicyName": policy_name,
+                "Class": policy_class,
                 "NameSpace": target_namespace,
                 "Supported": supported or "Not specified",
                 "DisplayName": display_name,
                 "ExplainText": explain_text,
                 "KeyPath": key_path_entries,
             }
+            if policy.get("clientExtension"):
+                records["ClientExtension"] = policy.get("clientExtension")
             if value_field:
                 records["ValueName"] = value_field
             records["Elements"] = elements
@@ -372,59 +381,72 @@ class AdmxParser:
             if key and key not in self._supported_text_cache:
                 self._supported_text_cache[key] = resolved
 
-    def _parse_elements(self, policy: Any, q, admx_base_name: str) -> List[Dict[str, object]]:
+    def _parse_elements(
+        self,
+        policy: Any,
+        q,
+        admx_base_name: str,
+        policy_class: str,
+    ) -> List[Dict[str, object]]:
         result: List[Dict[str, object]] = []
         elements_node = policy.find(q("elements"))
         if elements_node is not None:
             for element in elements_node:
                 tag = self._local_name(element.tag)
                 if tag == "decimal":
-                    result.append(
-                        {
-                            "Type": "Decimal",
-                            "ValueName": element.get("valueName"),
-                            "MinValue": element.get("minValue"),
-                            "MaxValue": element.get("maxValue"),
-                        }
-                    )
+                    record = {
+                        "Type": "Decimal",
+                        "ValueName": element.get("valueName"),
+                        "MinValue": element.get("minValue"),
+                        "MaxValue": element.get("maxValue") or element.get("maxvalue"),
+                    }
+                    self._add_element_metadata(record, element, policy_class)
+                    result.append(record)
                 elif tag == "boolean":
                     true_value = self._extract_simple_value(element.find(q("trueValue")), q)
                     false_value = self._extract_simple_value(element.find(q("falseValue")), q)
-                    result.append(
-                        {
-                            "Type": "Boolean",
-                            "ValueName": element.get("valueName"),
-                            "TrueValue": true_value if true_value is not None else "1",
-                            "FalseValue": false_value if false_value is not None else "0",
-                        }
-                    )
+                    record = {
+                        "Type": "Boolean",
+                        "ValueName": element.get("valueName"),
+                        "TrueValue": true_value if true_value is not None else "1",
+                        "FalseValue": false_value if false_value is not None else "0",
+                    }
+                    self._add_element_metadata(record, element, policy_class)
+                    result.append(record)
                 elif tag == "enum":
                     items = []
                     for item in element.findall(q("item")):
-                        display_name = self._resolve_string(item.get("displayName", ""), admx_base_name)
+                        display_name = self._clean_text(self._resolve_string(item.get("displayName", ""), admx_base_name))
                         value = self._extract_enum_value(item, q)
                         items.append({"DisplayName": display_name, "Data": value})
-                    result.append(
-                        {
-                            "Type": "Enum",
-                            "ValueName": element.get("valueName"),
-                            "Items": items,
-                        }
-                    )
+                    record = {
+                        "Type": "Enum",
+                        "ValueName": element.get("valueName"),
+                        "Items": items,
+                    }
+                    self._add_element_metadata(record, element, policy_class)
+                    result.append(record)
                 elif tag == "text":
-                    result.append(
-                        {
-                            "Type": "Text",
-                            "ValueName": element.get("valueName"),
-                        }
-                    )
+                    record = {
+                        "Type": "Text",
+                        "ValueName": element.get("valueName"),
+                    }
+                    self._add_element_metadata(record, element, policy_class)
+                    result.append(record)
+                elif tag == "multiText":
+                    record = {
+                        "Type": "MultiText",
+                        "ValueName": element.get("valueName"),
+                    }
+                    self._add_element_metadata(record, element, policy_class)
+                    result.append(record)
                 elif tag == "list":
-                    result.append(
-                        {
-                            "Type": "List",
-                            "ValueName": element.get("valueName"),
-                        }
-                    )
+                    record = {
+                        "Type": "List",
+                        "ValueName": element.get("valueName"),
+                    }
+                    self._add_element_metadata(record, element, policy_class)
+                    result.append(record)
 
         for tag_name, label in (
             ("enabledValue", "EnabledValue"),
@@ -440,6 +462,39 @@ class AdmxParser:
                 result.append({"Type": label, "Data": value})
 
         return result
+
+    def _add_element_metadata(
+        self,
+        record: Dict[str, object],
+        element: Any,
+        policy_class: str,
+    ) -> None:
+        attr_map = {
+            "id": "Id",
+            "required": "Required",
+            "key": "Key",
+            "valuePrefix": "ValuePrefix",
+            "additive": "Additive",
+            "explicitValue": "ExplicitValue",
+            "maxLength": "MaxLength",
+            "maxStrings": "MaxStrings",
+            "expandable": "Expandable",
+            "storeAsText": "StoreAsText",
+            "soft": "Soft",
+            "clientExtension": "ClientExtension",
+        }
+        bool_fields = {"required", "additive", "explicitValue", "expandable", "storeAsText", "soft"}
+        for source, target in attr_map.items():
+            if source not in element.attrib:
+                continue
+            value = element.get(source)
+            if value is None:
+                continue
+            record[target] = self._parse_bool(value) if source in bool_fields else value
+
+        key = element.get("key")
+        if key:
+            record["KeyPath"] = self._build_key_paths(policy_class, key)
 
     def _extract_enum_value(self, item: Any, q) -> Optional[str]:
         value_node = item.find(q("value"))
@@ -514,7 +569,7 @@ class AdmxParser:
             string_id = node.get("id")
             if not string_id:
                 continue
-            text = (node.text or "").strip()
+            text = self._normalize_quotes(self._node_text(node)).strip()
             if text:
                 table[string_id] = text
         return table
@@ -559,7 +614,7 @@ class AdmxParser:
 
     def _looks_obsolete(self, explain_text: str, supported: str) -> bool:
         text = f"{explain_text} {supported}".upper()
-        return any(flag in text for flag in ("OBSOLetE", "DEPRECATED", "UNSUPPORTED"))
+        return any(flag in text for flag in ("OBSOLETE", "DEPRECATED", "UNSUPPORTED"))
 
     def _compute_languages(self, explicit: Optional[Sequence[str]]) -> List[str]:
         if explicit:
@@ -581,8 +636,35 @@ class AdmxParser:
     def _local_name(self, tag: str) -> str:
         return tag.split("}", 1)[1] if "}" in tag else tag
 
+    def _node_text(self, node: Any) -> str:
+        return "".join(node.itertext()) if node is not None else ""
+
+    def _normalize_quotes(self, value: str) -> str:
+        return (value or "").translate(SMART_DOUBLE_QUOTES)
+
     def _clean_text(self, value: str) -> str:
-        return re.sub(r"\s+", " ", value or "").strip()
+        return re.sub(r"\s+", " ", self._normalize_quotes(value)).strip()
+
+    def _clean_multiline_text(self, value: str) -> str:
+        normalized = self._normalize_quotes(value).replace("\r\n", "\n").replace("\r", "\n")
+        lines = [re.sub(r"[ \t\f\v]+", " ", line).strip() for line in normalized.split("\n")]
+        while lines and not lines[0]:
+            lines.pop(0)
+        while lines and not lines[-1]:
+            lines.pop()
+        cleaned: List[str] = []
+        blank_seen = False
+        for line in lines:
+            if line:
+                cleaned.append(line)
+                blank_seen = False
+            elif not blank_seen:
+                cleaned.append("")
+                blank_seen = True
+        return "\n".join(cleaned)
+
+    def _parse_bool(self, value: str) -> bool:
+        return str(value).strip().lower() == "true"
 
     def _strip_prefix(self, value: str) -> str:
         return value.split(":", 1)[1] if ":" in value else value
@@ -765,7 +847,7 @@ def write_payload(path: Path, payload: List[Dict[str, object]], *, fmt: str, pre
     path.parent.mkdir(parents=True, exist_ok=True)
     if fmt == "yaml":
         if yaml is None:
-            raise SystemExit("YAML output requires the 'PyYAML' package. Install it with 'pip install pyyaml'.")
+            raise SystemExit("YAML output requires the 'PyYAML' package. Install it with 'pip install pyyaml'")
         serialized = yaml.safe_dump(
             payload,
             sort_keys=False,
@@ -787,6 +869,9 @@ def main(argv: Optional[Sequence[str]] = None) -> int:
 
     logging.basicConfig(level=logging.INFO, format="%(message)s")
 
+    if args.format == "yaml" and yaml is None:
+        raise SystemExit("YAML output requires the 'PyYAML' package. Install it with 'pip install pyyaml'")
+
     admx_parser = AdmxParser(
         definitions_path=args.definitions,
         languages=args.languages,
@@ -803,7 +888,7 @@ def main(argv: Optional[Sequence[str]] = None) -> int:
     output_format = args.format
     if output_format == "yaml":
         if not pretty_output:
-            LOG.info("--compress is ignored for YAML output.")
+            LOG.info("--compress is ignored for YAML output")
         pretty_output = True
     output_path = args.output
     if output_path is None:
