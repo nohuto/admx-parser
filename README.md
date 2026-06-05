@@ -11,7 +11,7 @@ This tool scans a Windows PolicyDefinitions directory (ADMX/ADML) and exports ev
 - Supports ignoring specific ADMX files, filtering by policy class (`Machine`/`User`), category name, or free-text policy search
 - Generates pretty JSON (or YAML) by default, `--compress` only affects JSON exports
 - Moves the `Class` directly into the `KeyPath` (moves `KeyName` into `KeyPath`, if `Elements` have no `Data` for it)
-- Adds meaning for `Supported` keys ([`supported.txt`](https://github.com/nohuto/admx-parser/blob/main/assets/Supported.txt))
+- Adds meaning for `Supported` keys ([`supported.txt`](https://github.com/nohuto/admx-parser/blob/main/assets/supported.txt))
 
 ## Requirements
 
@@ -61,7 +61,7 @@ python admx-parser.py --include-obsolete --output assets/policies.json --categor
 
 > [assets\policies.json](https://github.com/nohuto/admx-parser/blob/main/assets/policies.json)  
 > [assets\policy-categories.json](https://github.com/nohuto/admx-parser/blob/main/assets/policy-categories.json)  
-> [assets\Policies.yaml](https://github.com/nohuto/admx-parser/blob/main/assets/Policies.yaml)
+> [assets\policies.yaml](https://github.com/nohuto/admx-parser/blob/main/assets/policies.yaml)
 
 ```json
 {
